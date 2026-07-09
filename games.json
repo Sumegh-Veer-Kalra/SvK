@@ -1,0 +1,28 @@
+[
+  {
+    "id": "drop-off",
+    "title": "Drop-Off",
+    "category": "arcade",
+    "orientation": "portrait",
+    "aspectRatio": "9/16",
+    "thumbnail": "games/drop-off/cover_square.png",
+    "cover_square": "games/drop-off/cover_square.png",
+    "cover_landscape": "games/drop-off/cover_landscape.png",
+    "path": "games/drop-off/index.html",
+    "description": "Avoid obstacles, slam down, collect coins, and survive the endless fall!",
+    "controls": "Keyboard: A/D or Left/Right Arrow keys to move left/right. Spacebar to slam. Mouse/Touch: Tap or click the left/right side of the screen to move, and use the orange SLAM button to crash down.",
+    "featured": true,
+    "tags": [
+      "endless",
+      "fall",
+      "slam",
+      "coin",
+      "meteor",
+      "physics",
+      "ball",
+      "survive",
+      "brick",
+      "obstacle"
+    ]
+  }
+]

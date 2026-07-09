@@ -1,0 +1,903 @@
+/* ==========================================================================
+   SvK Games Portal Design System
+   ========================================================================== */
+
+/* --- CSS Variables & Root Styles --- */
+:root {
+    --bg-dark: #070714;
+    --bg-card: rgba(22, 22, 48, 0.6);
+    --border-color: rgba(255, 255, 255, 0.08);
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0c0;
+    --color-accent: #00ffcc;
+    --color-neon-pink: #ff3366;
+    --color-neon-yellow: #ffcc00;
+    --font-primary: 'Inter', sans-serif;
+    --font-heading: 'Bungee', sans-serif;
+    --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    font-family: var(--font-primary);
+    overflow-x: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- Header / Navigation --- */
+.main-header {
+    background-color: rgba(7, 7, 20, 0.95);
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-family: var(--font-heading); /* Restore Bungee for S and K */
+    font-size: 32px;
+    color: var(--color-accent);
+    letter-spacing: 1px;
+    text-shadow: 0 0 10px rgba(0, 255, 204, 0.4);
+    cursor: pointer;
+    display: flex;
+    align-items: baseline;
+}
+
+.logo-v {
+    font-family: var(--font-heading); /* Use the same Bungee font! */
+    font-size: 25px; /* Scale it down to simulate a lowercase v */
+    margin: 0 1px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    transition: var(--transition-smooth);
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: var(--text-primary);
+    background-color: rgba(255, 255, 255, 0.05);
+    border-bottom: 2px solid var(--color-accent);
+}
+
+/* --- Navigation Controls & Search Bar --- */
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.search-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-wrapper input {
+    background-color: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 8px 32px 8px 32px;
+    color: var(--text-primary);
+    font-family: var(--font-primary);
+    font-size: 13px;
+    width: 170px;
+    transition: var(--transition-smooth);
+}
+
+.search-wrapper input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
+    background-color: rgba(255, 255, 255, 0.08);
+    width: 210px; /* Dynamic expansion on click */
+}
+
+.search-icon {
+    position: absolute;
+    left: 10px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    pointer-events: none;
+}
+
+#search-clear-btn {
+    position: absolute;
+    right: 10px;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 12px;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#search-clear-btn:hover {
+    color: var(--color-neon-pink);
+}
+
+/* --- Portal Layout Container --- */
+.portal-container {
+    flex: 1;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 30px 20px;
+    box-sizing: border-box;
+}
+
+/* --- Hero / Featured Game Section --- */
+.featured-section {
+    margin-bottom: 40px;
+}
+
+.featured-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    display: flex;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+}
+
+.featured-info {
+    padding: 40px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.featured-tags-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.featured-info .tag {
+    background-color: var(--color-neon-pink);
+    color: white;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 12px;
+    letter-spacing: 1px;
+}
+
+.tag-category {
+    background-color: #00ff88; /* Neon Green background */
+    color: #050515;            /* Dark text for contrast */
+    font-size: 11px;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.featured-title {
+    font-family: var(--font-heading);
+    font-size: 42px;
+    margin: 0;
+    color: var(--text-primary);
+}
+
+.featured-desc {
+    color: var(--text-secondary);
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0 0 10px 0;
+}
+
+.play-btn-large {
+    background: linear-gradient(135deg, var(--color-accent), #00c3ff);
+    color: #000;
+    font-family: var(--font-heading);
+    font-size: 18px;
+    border: none;
+    padding: 14px 35px;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 255, 204, 0.4);
+    transition: var(--transition-smooth);
+}
+
+.play-btn-large:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 255, 204, 0.6);
+}
+
+.featured-media {
+    flex: 0 0 45%; /* Fixed at 45% card width */
+    aspect-ratio: 16 / 9; /* Lock container to perfect 16:9 ratio */
+    background-color: #0c0c20;
+    position: relative;
+}
+
+.media-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.85;
+}
+
+/* --- Games Grid Section --- */
+.games-section {
+    margin-top: 20px;
+}
+
+.section-title {
+    font-family: var(--font-heading);
+    font-size: 24px;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+    border-left: 4px solid var(--color-neon-pink);
+    padding-left: 12px;
+}
+
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 24px;
+}
+
+/* --- Game Card Item --- */
+.game-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transition: var(--transition-smooth);
+    display: flex;
+    flex-direction: column;
+}
+
+.game-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--color-accent);
+    box-shadow: 0 10px 20px rgba(0, 255, 204, 0.25);
+}
+
+.game-thumb-wrapper {
+    width: 100%;
+    padding-top: 75%; /* 4:3 Aspect Ratio */
+    position: relative;
+    background-color: #0f0f2a;
+    overflow: hidden;
+}
+
+.game-thumb {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    pointer-events: none; /* Disable browser-injected image hover search icons */
+}
+
+.game-card:hover .game-thumb {
+    transform: scale(1.08);
+}
+
+.game-info {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.game-title {
+    font-weight: 800;
+    font-size: 16px;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.game-meta {
+    font-size: 11px; /* Slightly smaller for cleaner visual weighting */
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center; /* Center-align elements vertically */
+}
+
+/* --- Game Modal Overlay & Player --- */
+.game-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 2000;
+    display: none; /* Hidden by default */
+    justify-content: center;
+    align-items: center;
+}
+
+.game-modal.active {
+    display: flex; /* Show as flex on desktop */
+}
+
+.modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(5, 5, 15, 0.96);
+}
+
+.modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #0f0f25;
+    border: 2px solid var(--border-color);
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 10;
+}
+
+.modal-header {
+    background: rgba(255, 255, 255, 0.02);
+    border-bottom: 1px solid var(--border-color);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-family: var(--font-primary);
+    font-weight: 800;
+    font-size: 18px;
+}
+
+.modal-controls {
+    display: flex;
+    gap: 12px;
+}
+
+.modal-controls button {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 20px;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: var(--transition-smooth);
+}
+
+.modal-controls button:hover {
+    color: var(--text-primary);
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+#closeBtn:hover {
+    background-color: var(--color-neon-pink);
+    color: white;
+}
+
+/* --- Dynamic Aspect-Ratio Wrapper --- */
+.iframe-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+    position: relative;
+    z-index: 2; /* Sits above mobile info panel */
+}
+
+.iframe-wrapper iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+}
+
+/* Portrait wrapper styling (like Drop-Off) */
+.iframe-wrapper.portrait {
+    width: 368px; /* Matches game-area client width perfectly */
+    height: 654px; /* Exact 9/16 ratio height for 368px */
+}
+
+/* Landscape wrapper styling */
+.iframe-wrapper.landscape {
+    width: 800px;
+    height: 450px; /* Fixed 16/9 size */
+}
+
+/* Square wrapper styling */
+.iframe-wrapper.square {
+    width: 500px;
+    height: 500px; /* Fixed 1/1 size */
+}
+
+/* --- Floating Close Button --- */
+.floating-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    font-size: 20px;
+    display: none; /* Hidden by default on desktop */
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 99999;
+    transition: var(--transition-smooth);
+}
+
+.floating-close-btn:hover {
+    background: rgba(255, 51, 102, 0.85); /* Neon pink on hover */
+    border-color: var(--color-neon-pink);
+    transform: scale(1.05);
+}
+
+/* --- Responsive Adjustments (Based on Screen Width) --- */
+@media (max-width: 768px) {
+    .header-container {
+        flex-direction: column;
+        gap: 12px;
+        padding: 12px 15px;
+        align-items: center;
+    }
+    .header-controls {
+        flex-direction: column;
+        width: 100%;
+        gap: 12px;
+        align-items: center;
+    }
+    .search-wrapper {
+        width: 100%;
+        max-width: 320px;
+    }
+    .search-wrapper input {
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .search-wrapper input:focus {
+        width: 100%; /* Prevent stretching past mobile boundary */
+    }
+    #search-clear-btn {
+        font-size: 18px !important; /* Make cross visually larger on mobile */
+    }
+    .logo {
+        font-size: 26px;
+    }
+    .nav-links {
+        width: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
+        gap: 10px;
+        justify-content: flex-start;
+        padding-bottom: 4px;
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
+    .nav-links::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera */
+    }
+    .nav-links a {
+        font-size: 13px;
+        padding: 6px 12px;
+        flex-shrink: 0;
+    }
+    .featured-card {
+        flex-direction: column-reverse;
+    }
+    .featured-info {
+        padding: 25px;
+    }
+    .featured-title {
+        font-size: 32px;
+    }
+    .games-grid {
+        grid-template-columns: repeat(2, 1fr); /* Force exactly 2 columns on mobile screen widths */
+        gap: 16px;
+    }
+    .game-info {
+        padding: 10px 8px !important; /* Reduce padding on mobile to reclaim horizontal space and fix cutoff */
+        gap: 6px;
+    }
+    .game-title {
+        font-size: 14px !important; /* Scale down title for 2-column mobile cards */
+    }
+    .game-meta {
+        font-size: 10px !important; /* Scale down metadata text to fit comfortably */
+    }
+    .iframe-wrapper.landscape {
+        width: 95vw;
+        max-height: 75vh;
+    }
+    .iframe-wrapper.portrait {
+        height: 75vh;
+    }
+}
+
+/* --- Touchscreen Capabilities (Based on Input Mechanism) --- */
+@media (pointer: coarse) {
+    /* Hide the desktop header and show the floating circular close button */
+    .modal-header {
+        display: none !important;
+    }
+    .floating-close-btn {
+        display: flex !important;
+    }
+}
+
+/* --- Modal Body & Sidebar Layouts --- */
+
+/* Floating PC Sidebar (Desktop) */
+.game-sidebar {
+    position: absolute;
+    right: 4%; /* Float on the right of the viewport */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 320px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    box-sizing: border-box;
+    z-index: 2010; /* Make sure it draws over the backdrop */
+    color: var(--text-primary);
+    background: transparent; /* Float on the darkened backdrop */
+    border: none;
+    pointer-events: auto; /* Enable scroll and text highlight */
+}
+
+.sidebar-title {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    color: var(--color-neon-cyan);
+    margin: 0 0 5px 0;
+    border-bottom: 2px solid rgba(0, 255, 204, 0.1);
+    padding-bottom: 8px;
+}
+
+.sidebar-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sidebar-section-title {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--color-neon-pink);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.sidebar-section-text {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Mobile Layout Overlay Below Game */
+.mobile-info-panel {
+    display: none; /* Hidden on desktop */
+}
+
+/* Mobile Layout Overlay Below Game (Only active on true mobile touchscreen devices) */
+.mobile-device .game-modal {
+    display: none; /* Hidden by default */
+    background-color: #05050f; /* Pitch black solid background to completely cover parent portal */
+    overflow-y: scroll; /* Enable page scroll on the modal overlay */
+    -webkit-overflow-scrolling: touch; /* Momentum scrolling */
+    overscroll-behavior: contain; /* Prevent background scroll chaining/leaks */
+}
+
+.mobile-device .game-modal.active {
+    display: block; /* Show as block on mobile for natural scrolling flow */
+}
+
+/* Mobile responsive wrapper overrides to prevent viewport clipping */
+.mobile-device .iframe-wrapper.portrait {
+    width: 100%;
+    max-width: 368px;
+    height: auto;
+    aspect-ratio: 9/16;
+}
+
+.mobile-device .iframe-wrapper.landscape {
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+    aspect-ratio: 16/9;
+}
+
+.mobile-device .iframe-wrapper.square {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    aspect-ratio: 1/1;
+}
+
+/* Force 1:1 square ratio when showing play cover to prevent crop/cut of square cover assets */
+.mobile-device .iframe-wrapper.showing-cover {
+    aspect-ratio: 1/1 !important;
+    max-width: 368px;
+    width: 100%;
+    height: auto !important;
+}
+
+.mobile-device .modal-backdrop {
+    background-color: #05050f !important; /* Solid background on backdrop */
+    opacity: 1 !important;
+    position: fixed; /* Keep it fixed behind the content */
+}
+
+.mobile-device .modal-content {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    width: 95%;
+    max-width: 95%; /* Default fallback width */
+    max-height: none; /* Let height flow naturally with content */
+    overflow-y: visible; /* Scroll is handled by modal, not content container */
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    box-shadow: none; /* No shadow needed on solid background */
+    border: none; /* Borderless for clean page-like feel */
+    background: transparent;
+}
+
+/* Orientation-specific widths for mobile modal container */
+.mobile-device .modal-content.portrait {
+    max-width: 368px; /* Cap portrait at standard mobile size */
+}
+
+.mobile-device .modal-content.landscape {
+    max-width: 800px; /* Allow wider landscape games */
+}
+
+.mobile-device .modal-content.square {
+    max-width: 500px; /* Allow square games to fit */
+}
+
+.mobile-device .floating-close-btn {
+    position: fixed !important; /* Keep Close button fixed on screen, not scrolling away! */
+    top: 15px;
+    right: 15px;
+    z-index: 999999 !important; /* Draw above everything */
+    display: flex !important;
+}
+
+.mobile-device .game-sidebar {
+    display: none !important; /* Hide PC sidebar on true mobile */
+}
+
+.mobile-device .mobile-info-panel {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-color: #0c0c24;
+    padding: 20px;
+    box-sizing: border-box;
+    gap: 20px;
+    color: var(--text-primary);
+    border-top: 1px solid var(--border-color);
+    position: relative;
+    z-index: 1; /* Sits below the iframe borders */
+}
+
+.mobile-device .mobile-header-row {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.mobile-device .mobile-thumb-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 12px;
+    border: 2px solid var(--border-color);
+    object-fit: cover;
+    pointer-events: none; /* Disable browser image search hover menus */
+}
+
+.mobile-device .mobile-game-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+}
+
+.mobile-device .mobile-similar-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.mobile-device .similar-game-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    transition: var(--transition-smooth);
+}
+
+.mobile-device .similar-game-card:hover {
+    border-color: var(--color-neon-cyan);
+}
+
+.mobile-device .similar-thumb {
+    width: 45px;
+    height: 45px;
+    border-radius: 6px;
+    object-fit: cover;
+    pointer-events: none; /* Disable browser image search hover menus */
+}
+
+.mobile-device .similar-title {
+    font-family: var(--font-heading);
+    font-size: 11px;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+}
+
+/* On Desktop, if the window is shrunk horizontally, hide the floating sidebar so it doesn't cover the game */
+@media (max-width: 1100px) {
+    .desktop-device .game-sidebar {
+        display: none !important;
+    }
+}
+
+/* --- Mobile Play Cover --- */
+.mobile-play-cover {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    cursor: pointer;
+    box-sizing: border-box;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* Add a light overlay to the background cover so the button pops */
+.mobile-play-cover::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(5, 5, 15, 0.3); /* Lighter tint, no blur */
+    z-index: 1;
+}
+
+.mobile-play-btn {
+    position: relative;
+    z-index: 2;
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, var(--color-accent), #00c3ff);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 25px rgba(0, 255, 204, 0.5);
+    color: #050515;
+    transition: var(--transition-smooth);
+    margin-bottom: 12px;
+}
+
+.mobile-play-btn svg {
+    margin-left: 4px; /* Offset to center play arrow visually */
+}
+
+.mobile-play-btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 35px rgba(0, 255, 204, 0.7);
+}
+
+.mobile-play-text {
+    position: relative;
+    z-index: 2;
+    font-family: var(--font-heading);
+    font-size: 15px;
+    font-weight: 800;
+    color: white;
+    letter-spacing: 2px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+/* Floating Mobile Back Button inside Fullscreen */
+.mobile-back-btn {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    z-index: 9999999;
+    background: rgba(255, 51, 102, 0.9);
+    border: 1px solid var(--color-neon-pink);
+    color: white;
+    font-family: var(--font-heading);
+    font-size: 12px;
+    padding: 10px 16px;
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(255, 51, 102, 0.4);
+    cursor: pointer;
+    display: none; /* Controlled by JS handleFullscreenChange */
+    align-items: center;
+    gap: 6px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 800;
+}
