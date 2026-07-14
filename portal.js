@@ -1,7 +1,4 @@
-/**
- * SvK Games Portal Controller
- * Manages game listings, categories, and dynamic iframe scaling/injection.
- */
+
 
 class PortalController {
     constructor() {
@@ -14,13 +11,13 @@ class PortalController {
         this.currentIframe = null;
         this.searchQuery = "";
 
-        // Ultimate safe touchscreen/mobile device check (combines UA sniffer, pointer type, and touch events support)
+        
         this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
                         window.matchMedia("(pointer: coarse)").matches ||
                         ('ontouchstart' in window) ||
                         (navigator.maxTouchPoints > 0);
 
-        // Apply device class to body for strict CSS layout control
+        
         if (this.isMobile) {
             document.body.classList.add("mobile-device");
         } else {
@@ -36,25 +33,25 @@ class PortalController {
             const response = await fetch('games.json');
             this.games = await response.json();
             
-            // Render the featured section
+            
             this.renderFeatured();
             
-            // Draw the main grid
+            
             this.renderGrid();
             
-            // Draw the recently played shelf
+            
             this.renderRecentlyPlayed();
             
-            // Setup category listeners
+            
             this.setupCategoryFilters();
             
-            // Setup fullscreen toggle
+            
             this.setupFullscreen();
 
-            // Setup search features
+            
             this.setupSearch();
 
-            // Bind global fullscreen change listeners to detect native back exits
+            
             document.addEventListener("fullscreenchange", () => this.handleFullscreenChange());
             document.addEventListener("webkitfullscreenchange", () => this.handleFullscreenChange());
         } catch (e) {
@@ -62,7 +59,7 @@ class PortalController {
         }
     }
 
-    // --- Render Featured Section Dynamically ---
+    
     renderFeatured() {
         const featuredGame = this.games.find(g => g.featured) || this.games[0];
         if (!featuredGame) return;
@@ -89,44 +86,44 @@ class PortalController {
             mediaImg.style.backgroundImage = `url('${featuredGame.cover_landscape}')`;
         }
         if (card) {
-            card.style.display = "flex"; // Reveal once populated
+            card.style.display = "flex"; 
         }
     }
 
-    // --- Render Cards in Grid ---
+    
     renderGrid() {
         const grid = document.getElementById("games-grid-container");
         if (!grid) return;
 
         grid.innerHTML = "";
 
-        // Dynamically update section header title
+        
         const sectionTitle = document.getElementById("games-section-title");
         if (sectionTitle) {
             if (this.searchQuery.length > 0) {
                 sectionTitle.innerText = "Search Results";
             } else if (this.activeFilter !== "all") {
-                // Capitalize first letter of category filter (e.g. "Arcade Games")
+                
                 sectionTitle.innerText = this.activeFilter.charAt(0).toUpperCase() + this.activeFilter.slice(1) + " Games";
             } else {
                 sectionTitle.innerText = "Popular Games";
             }
         }
 
-        // Toggle featured section visibility based on whether the user is searching
+        
         const featuredCard = document.getElementById("featured-game-card");
         if (featuredCard) {
             if (this.searchQuery.length > 0) {
                 featuredCard.style.display = "none";
             } else {
-                // Only show if we actually have games loaded
+                
                 if (this.games.length > 0) {
                     featuredCard.style.display = "flex";
                 }
             }
         }
 
-        // Toggle recently played section visibility based on whether the user is searching
+        
         const recentlyPlayedSection = document.getElementById("recently-played-section");
         if (recentlyPlayedSection) {
             if (this.searchQuery.length > 0) {
@@ -137,12 +134,12 @@ class PortalController {
         }
 
         const filteredGames = this.games.filter(game => {
-            // 1. Filter by category
+            
             if (this.activeFilter !== "all" && game.category !== this.activeFilter) {
                 return false;
             }
             
-            // 2. Filter by search query
+            
             if (this.searchQuery.length > 0) {
                 const q = this.searchQuery;
                 const matchTitle = game.title.toLowerCase().includes(q);
@@ -158,7 +155,7 @@ class PortalController {
 
         if (filteredGames.length === 0) {
             if (this.searchQuery.length > 0) {
-                // 1. Render the header text spanning all columns
+                
                 const header = document.createElement("div");
                 header.style.cssText = "grid-column: 1/-1; text-align: center; color: var(--text-secondary); padding: 20px 0 30px 0;";
                 header.innerHTML = `
@@ -167,11 +164,11 @@ class PortalController {
                 `;
                 grid.appendChild(header);
 
-                // 2. Query featured games to render as standard cards
+                
                 const featuredList = this.games.filter(g => g.featured);
                 const recommendGames = featuredList.length > 0 ? featuredList : this.games.slice(0, 3);
 
-                // 3. Render recommended games as normal game-cards in the grid
+                
                 recommendGames.forEach(game => {
                     const card = document.createElement("div");
                     card.className = "game-card";
@@ -196,7 +193,7 @@ class PortalController {
                     grid.appendChild(card);
                 });
             } else {
-                // Standard empty category filter message
+                
                 grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--text-secondary); padding: 40px 0;">No games found in this category yet.</div>`;
             }
             return;
@@ -208,7 +205,7 @@ class PortalController {
             card.setAttribute("data-id", game.id);
             card.onclick = () => this.playGame(game.id);
 
-            // Format category name for display
+            
             const displayCategory = game.category.toUpperCase();
 
             card.innerHTML = `
@@ -228,54 +225,54 @@ class PortalController {
         });
     }
 
-    // --- Category Filter Setup ---
+    
     setupCategoryFilters() {
         const filters = document.querySelectorAll(".nav-links a");
         filters.forEach(link => {
             link.addEventListener("click", (e) => {
                 e.preventDefault();
                 
-                // Toggle active class
+                
                 filters.forEach(f => f.classList.remove("active"));
                 link.classList.add("active");
 
-                // Set filter & redraw
+                
                 this.activeFilter = link.getAttribute("data-filter");
                 this.renderGrid();
             });
         });
     }
 
-    // --- Open Game & Resize IFrame Wrapper ---
+    
     playGame(gameId) {
         const game = this.games.find(g => g.id === gameId);
         if (!game) return;
 
         console.log(`[Portal] Launching game: ${game.title} (${game.orientation})`);
         
-        // Lock background body scroll to prevent swipe gesture collisions on mobile
+        
         document.body.style.overflow = "hidden";
         
-        // Reset any existing aspect ratio classes
+        
         this.wrapper.className = "iframe-wrapper";
-        // Apply the correct orientation class (portrait / landscape / square)
+        
         this.wrapper.classList.add(game.orientation);
 
-        // Apply same orientation class to the modal-content for mobile width sizing overrides
+        
         const modalContent = this.modal.querySelector(".modal-content");
         if (modalContent) {
-            modalContent.className = "modal-content"; // Reset classes
+            modalContent.className = "modal-content"; 
             modalContent.classList.add(game.orientation);
         }
 
-        // Update modal title
+        
         this.modalTitle.innerText = game.title.toUpperCase();
 
         const isMobile = this.isMobile;
         if (isMobile) {
             console.log(`[Portal] Mobile viewport detected. Injecting play cover for: ${game.title}`);
             this.wrapper.classList.add("showing-cover");
-            // Show square cover with a play button overlay instead of loading iframe directly
+            
             this.wrapper.innerHTML = `
                 <div class="mobile-play-cover" style="background-image: url('${game.cover_square}');" onclick="portal.startMobileGame('${game.id}')">
                     <div class="mobile-play-btn">
@@ -289,7 +286,7 @@ class PortalController {
             this.currentIframe = null;
         } else {
             const cacheBuster = Date.now();
-            // Inject the iframe dynamically with a cache-buster query parameter
+            
             this.wrapper.innerHTML = `
                 <iframe src="${game.path}?v=${cacheBuster}" 
                         id="active-game-iframe"
@@ -299,11 +296,11 @@ class PortalController {
             `;
             this.currentIframe = document.getElementById("active-game-iframe");
             
-            // Add to recently played shelf
+            
             this.addToRecentlyPlayed(gameId);
         }
 
-        // Populate PC Sidebar
+        
         const pcSidebar = document.getElementById("game-pc-sidebar");
         if (pcSidebar) {
             pcSidebar.innerHTML = `
@@ -319,18 +316,18 @@ class PortalController {
             `;
         }
 
-        // Populate Mobile Panel
+        
         const mobilePanel = document.getElementById("game-mobile-panel");
         if (mobilePanel) {
-            // Find similar games (exclude current)
+            
             let similarGames = this.games.filter(g => g.id !== game.id);
-            // Sort to prioritize same category
+            
             similarGames.sort((a, b) => {
                 if (a.category === game.category && b.category !== game.category) return -1;
                 if (a.category !== game.category && b.category === game.category) return 1;
                 return 0;
             });
-            // Cap at 10 games
+            
             similarGames = similarGames.slice(0, 10);
 
             let similarHtml = "";
@@ -373,22 +370,22 @@ class PortalController {
             `;
         }
 
-        // Open modal
+        
         this.modal.classList.add("active");
 
-        // Force focus onto the iframe so keyboard controls respond instantly with 0 latency
+        
         setTimeout(() => {
             if (this.currentIframe) {
                 this.currentIframe.focus();
                 try {
                     this.currentIframe.contentWindow.focus();
                 } catch (e) {
-                    // Ignore cross-origin warnings if any
+                    
                 }
             }
         }, 150);
 
-        // Keep iframe focused when the player clicks inside the game wrapper area
+        
         this.wrapper.onclick = () => {
             if (this.currentIframe) {
                 this.currentIframe.focus();
@@ -396,12 +393,12 @@ class PortalController {
         };
     }
 
-    // Used by Hero/Featured banner Play Now button
+    
     playFeatured(gameId) {
         this.playGame(gameId);
     }
 
-    // Handles play button tap on mobile cover to open game in fullscreen
+    
     startMobileGame(gameId) {
         const game = this.games.find(g => g.id === gameId);
         if (!game) return;
@@ -411,7 +408,7 @@ class PortalController {
         this.wrapper.classList.remove("showing-cover");
 
         const cacheBuster = Date.now();
-        // Inject the iframe dynamically along with the mobile exit button
+        
         this.wrapper.innerHTML = `
             <button id="mobile-back-btn" class="mobile-back-btn" onclick="portal.exitMobileFullscreen()" style="display: none;">
                 ✕ Back
@@ -424,19 +421,19 @@ class PortalController {
         `;
         this.currentIframe = document.getElementById("active-game-iframe");
 
-        // Add to recently played shelf
+        
         this.addToRecentlyPlayed(gameId);
 
-        // Request Fullscreen on the wrapper container
+        
         if (this.wrapper.requestFullscreen) {
             this.wrapper.requestFullscreen().catch(err => console.error(err));
-        } else if (this.wrapper.webkitRequestFullscreen) { /* Safari */
+        } else if (this.wrapper.webkitRequestFullscreen) { 
             this.wrapper.webkitRequestFullscreen();
-        } else if (this.wrapper.msRequestFullscreen) { /* IE11 */
+        } else if (this.wrapper.msRequestFullscreen) { 
             this.wrapper.msRequestFullscreen();
         }
 
-        // Force focus onto the iframe
+        
         setTimeout(() => {
             if (this.currentIframe) {
                 this.currentIframe.focus();
@@ -447,39 +444,39 @@ class PortalController {
         }, 150);
     }
 
-    // --- Close Game & Stop Audio ---
+    
     closeGame() {
         console.log("[Portal] Closing active game player.");
         
-        // Restore background body scroll
+        
         document.body.style.overflow = "";
         
-        // Remove iframe completely so all audio/loops stop executing
+        
         this.wrapper.innerHTML = "";
         this.currentIframe = null;
 
-        // Hide modal
+        
         this.modal.classList.remove("active");
         
-        // Exit fullscreen if active
+        
         if (document.fullscreenElement) {
             document.exitFullscreen().catch(err => console.log(err));
         }
     }
 
-    // --- Fullscreen Handling ---
+    
     setupFullscreen() {
         this.fullscreenBtn.addEventListener("click", () => {
             const iframe = document.getElementById("active-game-iframe");
             if (!iframe) return;
 
             if (!document.fullscreenElement) {
-                // Request fullscreen on the iframe container or iframe directly
+                
                 if (iframe.requestFullscreen) {
                     iframe.requestFullscreen();
-                } else if (iframe.webkitRequestFullscreen) { /* Safari */
+                } else if (iframe.webkitRequestFullscreen) { 
                     iframe.webkitRequestFullscreen();
-                } else if (iframe.msRequestFullscreen) { /* IE11 */
+                } else if (iframe.msRequestFullscreen) { 
                     iframe.msRequestFullscreen();
                 }
             } else {
@@ -488,7 +485,7 @@ class PortalController {
         });
     }
 
-    // Exits fullscreen mode on mobile
+    
     exitMobileFullscreen() {
         console.log("[Portal] Exit fullscreen button tapped.");
         if (document.exitFullscreen) {
@@ -500,11 +497,11 @@ class PortalController {
         }
     }
 
-    // Handles fullscreen change events to show/hide close button or clean up iframe
+    
     handleFullscreenChange() {
         const isFullscreen = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
         
-        // Find our mobile back button
+        
         const backBtn = document.getElementById("mobile-back-btn");
         if (backBtn) {
             backBtn.style.display = isFullscreen ? "flex" : "none";
@@ -513,13 +510,13 @@ class PortalController {
         if (!isFullscreen && this.isMobile) {
             console.log("[Portal] Exited fullscreen on mobile. Stopping game and restoring play cover.");
             
-            // 1. Get the current active game info
+            
             const activeIframe = document.getElementById("active-game-iframe");
             if (activeIframe) {
-                // Find which game matches the path
+                
                 const game = this.games.find(g => activeIframe.src.includes(g.path));
                 if (game) {
-                    // Restore the play cover and destroy the iframe completely!
+                    
                     this.wrapper.classList.add("showing-cover");
                     this.wrapper.innerHTML = `
                         <button id="mobile-back-btn" class="mobile-back-btn" onclick="portal.exitMobileFullscreen()" style="display: none;">
@@ -540,7 +537,7 @@ class PortalController {
         }
     }
 
-    // --- Search Bar Input Handling ---
+    
     setupSearch() {
         const searchInput = document.getElementById("search-input");
         const clearBtn = document.getElementById("search-clear-btn");
@@ -549,12 +546,12 @@ class PortalController {
         searchInput.addEventListener("input", (e) => {
             this.searchQuery = e.target.value.toLowerCase().trim();
             
-            // Toggle clear button visibility
+            
             if (clearBtn) {
                 clearBtn.style.display = this.searchQuery.length > 0 ? "block" : "none";
             }
             
-            // Redraw games grid
+            
             this.renderGrid();
         });
 
@@ -569,7 +566,7 @@ class PortalController {
         }
     }
 
-    // Forcing mobile device emulator mode from console
+    
     forceMobileMode() {
         console.log("[Portal Developer Tools] Forcing mobile mode...");
         this.isMobile = true;
@@ -580,7 +577,7 @@ class PortalController {
         this.renderRecentlyPlayed();
     }
 
-    // --- Recently Played Management (Stored in localStorage) ---
+    
     addToRecentlyPlayed(gameId) {
         let list = [];
         try {
@@ -592,13 +589,13 @@ class PortalController {
             console.error("[Portal] Failed to parse recently played list:", e);
         }
 
-        // Remove duplicate if it exists to bump it to the front
+        
         list = list.filter(id => id !== gameId);
 
-        // Add to the front of the list
+        
         list.unshift(gameId);
 
-        // Cap at 5 games
+        
         list = list.slice(0, 5);
 
         try {
@@ -607,7 +604,7 @@ class PortalController {
             console.error("[Portal] Failed to save recently played list:", e);
         }
 
-        // Refresh display shelf
+        
         this.renderRecentlyPlayed();
     }
 
@@ -626,13 +623,13 @@ class PortalController {
             console.error(e);
         }
 
-        // If array is empty, completely hide the section (prevents blank/odd gaps for new users)
+        
         if (list.length === 0) {
             section.style.display = "none";
             return;
         }
 
-        // Map string IDs to actual database entries
+        
         const playedGames = list
             .map(id => this.games.find(g => g.id === id))
             .filter(Boolean);
@@ -671,12 +668,12 @@ class PortalController {
     }
 }
 
-// Global instance variable
+
 let portal;
 window.addEventListener("DOMContentLoaded", () => {
     portal = new PortalController();
     
-    // Developer mode toggle command helper
+    
     window.mode = {
         mobile: function() {
             if (portal) {
@@ -688,4 +685,3 @@ window.addEventListener("DOMContentLoaded", () => {
     };
 });
 
-//Git test

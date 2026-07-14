@@ -41,11 +41,11 @@ shakeToggle.checked = shakeEnabled;
 const gameOverOverlay = document.getElementById('gameOverOverlay');
 
 let totalCoins = parseInt(gameStorage.getItem('totalCoins')) || 0;
-let doubleCoinsUsed = false;   // track if Double Coins was used this run
+let doubleCoinsUsed = false;   
 
 const SLAM_SOUND_FILE = 'sfx/explosion.wav';
-const JET_SOUND_FILE = 'sfx/jet_engine.mp3';  // for slam charge-up
-const FAIL_SOUND_FILE = 'sfx/fail-sound-effect.mp3';   // <-- add this line
+const JET_SOUND_FILE = 'sfx/jet_engine.mp3';  
+const FAIL_SOUND_FILE = 'sfx/fail-sound-effect.mp3';   
 
 const SFX = (() => {
     let audioCtx = null;
@@ -101,12 +101,12 @@ const SFX = (() => {
     function jetStart() {
         if (!sfxEnabled) return;
         init();
-        // Cancel any pending duck restoration
+        
         if (jetDuckTimer) {
             clearTimeout(jetDuckTimer);
             jetDuckTimer = null;
         }
-        // Restore full volume and play if paused
+        
         if (jetAudio) {
             jetAudio.volume = 1.0;
             if (jetAudio.paused) {
@@ -124,25 +124,25 @@ const SFX = (() => {
         if (jetAudio && !jetAudio.paused) {
             jetAudio.pause();
             jetAudio.currentTime = 0;
-            jetAudio.volume = 1.0;     // reset for next time
+            jetAudio.volume = 1.0;     
         }
     }
 
     function slam() {
         if (!sfxEnabled) return;
         init();
-        // Play explosion
+        
         if (slamAudio) {
             slamAudio.currentTime = 0;
             slamAudio.play().catch(() => {});
         }
-        // Duck the jet engine volume for 1 second
+        
         if (jetAudio && !jetAudio.paused) {
-            jetAudio.volume = 0.25;               // lower volume (adjust as needed)
+            jetAudio.volume = 0.25;               
             if (jetDuckTimer) clearTimeout(jetDuckTimer);
             jetDuckTimer = setTimeout(() => {
                 if (jetAudio && !jetAudio.paused) {
-                    jetAudio.volume = 1.0;        // restore after 1 second
+                    jetAudio.volume = 1.0;        
                 }
                 jetDuckTimer = null;
             }, 1000);
@@ -157,7 +157,7 @@ const SFX = (() => {
         const gain = audioCtx.createGain();
         osc.type = 'square';
 
-        // step 5 → lowest & quietest
+        
         if (step === 5) {
             osc.frequency.value = 350;
             gain.gain.setValueAtTime(0.1, now);
@@ -173,7 +173,7 @@ const SFX = (() => {
         } else if (step === 1) {
             osc.frequency.value = 1150;
             gain.gain.setValueAtTime(0.5, now);
-        } else {                         // step 0 = "GO!"
+        } else {                         
             osc.frequency.value = 1350;
             gain.gain.setValueAtTime(0.6, now);
         }
@@ -282,8 +282,8 @@ let AREA_WIDTH = gameArea.clientWidth;
 const BALL_SIZE = 40;
 
 
-const WALL_ASSET = "obstacles/brick.png";           // normal obstacle
-const BREAKABLE_ASSET = "obstacles/cracked_brick.png"; // breakable obstacle
+const WALL_ASSET = "obstacles/brick.png";           
+const BREAKABLE_ASSET = "obstacles/cracked_brick.png"; 
 const OBSTACLE_EXTRA = 10; 
 
 const obstacleStyle = document.createElement('style');
@@ -323,7 +323,7 @@ let targetForBreakable = Math.floor(Math.random() * 6) + 5;
 let dynamicSpeedX = 5.0;
 
 
-// Listen for the first real user interaction
+
 
 const MENU_AI_SCRIPT = [
     { ballX:130, gapX:110, gapWidth:160, step:270 },
@@ -467,7 +467,7 @@ function gameLoop() {
                 }
             }
             const diff = aiTargetX - x;
-            const step = 4.2 * Math.min(deltaTime * 60, 2.0); // Smoother sliding base speed and tighter cap
+            const step = 4.2 * Math.min(deltaTime * 60, 2.0); 
             if (Math.abs(diff) > step) {
                 x += Math.sign(diff) * step;
             } else {
@@ -483,12 +483,12 @@ function gameLoop() {
             const newETA = Math.ceil(countdownETA);
             if (countdownOverlay.innerText !== String(newETA)) {
                 countdownOverlay.innerText = newETA;
-                SFX.countdownBeep(newETA);   // 3 → 2 → 1 – increasingly loud
+                SFX.countdownBeep(newETA);   
             }
         } else {
             if (countdownOverlay.innerText !== "GO!") {
                 countdownOverlay.innerText = "GO!";
-                SFX.countdownBeep(0);        // final loud "GO!" beep
+                SFX.countdownBeep(0);        
             }
         }
 
@@ -513,10 +513,10 @@ function gameLoop() {
         const isSlamming = slamProgress >= 1;
         if (slamProgress > 0) {
             ball.classList.add('slamming');
-            SFX.jetStart();   // keeps calling – harmless if already playing
+            SFX.jetStart();   
         } else {
             ball.classList.remove('slamming');
-            SFX.jetStop();    // only stops when slam is fully released
+            SFX.jetStop();    
         }
 
         
@@ -907,7 +907,7 @@ function gameOver(hitObstacle) {
     isPaused = true;
     SFX.jetStop(); 
     gameState = "gameover";
-    SFX.fail();   // play death sound
+    SFX.fail();   
     
     const ballRect = ball.getBoundingClientRect();
     const areaRect = gameArea.getBoundingClientRect();
@@ -1088,7 +1088,7 @@ function showCoinDoublingToast() {
     toast.appendChild(img);
     toast.appendChild(text);
     document.body.appendChild(toast);
-    // Force reflow for transition
+    
     void toast.offsetWidth;
     toast.classList.add('show');
     setTimeout(() => {
@@ -1102,15 +1102,15 @@ function resetGameEngine(goToMenu) {
     if (gameState === "gameover") {
         const runScore = Math.floor((worldY - startY) / 100);
         if (runScore > 0) {
-            // Double the reward if the player used the Double Coins button
+            
             const reward = doubleCoinsUsed ? runScore * 2 : runScore;
             totalCoins += reward;
             gameStorage.setItem('totalCoins', totalCoins);
-            updateHighScoreIfNeeded(runScore);    // high score still uses the original value
+            updateHighScoreIfNeeded(runScore);    
             updateStreakForToday();
             updateMenuStats();
         }
-        doubleCoinsUsed = false;   // reset for next run
+        doubleCoinsUsed = false;   
     }
 
     
@@ -1316,7 +1316,7 @@ menuRestartBtn.addEventListener('click', () => {
 
     setTimeout(() => {
         location.reload();
-    }, 80); // small delay lets sound play
+    }, 80); 
 });
 
 window.addEventListener('keydown', (e) => {
@@ -1577,9 +1577,9 @@ function handleTrailActionBtn(e) {
             gameStorage.setItem('totalCoins', totalCoins);
             unlockedTrails.push(trail.id);
             gameStorage.setItem('unlockedTrails', JSON.stringify(unlockedTrails));
-            // Happytime: first trail purchase
+            
             if (unlockedTrails.length === 1)
-            // Happytime: most costly trail (Binary, cost 3500)
+            
             if (trail.id === 'binary')
             activeTrail = trail.id;
             localStorage.setItem('activeTrail', activeTrail);
@@ -1745,9 +1745,9 @@ function handleActionBtnInteraction(e) {
             
             unlockedSkins.push(currentSkin.id);
             localStorage.setItem('unlockedSkins', JSON.stringify(unlockedSkins));
-            // Happytime: first skin purchase (default is always unlocked, so length 2 = first buy)
+            
             if (unlockedSkins.length === 2)
-            // Happytime: most costly skin (Cosmic Disco, cost 2500)
+            
             if (currentSkin.id === 'cd')
             
             activeSkin = currentSkin.id;
@@ -2066,9 +2066,9 @@ function updateSettingsNameDisplay() {
 }
 
 
-// Username Initialization
+
 (async function initUser() {
-    // Fallback: use local username popup if name is not set
+    
     if (!localStorage.getItem('playerName')) {
         openUsernameOverlay(null);
     } else {

@@ -21,8 +21,8 @@
             width: 100%;
             height: 30px;
             z-index: 1;
-            will-change: transform;        /* 🚀 stay on GPU */
-            transform: translateY(0);      /* initial transform */
+            will-change: transform;        
+            transform: translateY(0);      
         }
 
         body {
@@ -48,7 +48,7 @@
             margin: 0 auto;
             border-left: 6px solid #222;
             border-right: 6px solid #222;
-            box-sizing: border-box;   /* include borders in width */
+            box-sizing: border-box;   
         }
 
         #gameSurface {
@@ -57,9 +57,9 @@
             position: absolute;
             top: 0;
             left: 0;
-            background: #0a0a1f;               /* just a fallback solid colour */
+            background: #0a0a1f;               
             box-shadow: inset 0 0 120px rgba(0,0,0,0.9);
-            will-change: transform;            /* for screen shake */
+            will-change: transform;            
         }
         #bgLayer {
             position: absolute;
@@ -88,7 +88,7 @@
             width: 50px;
             height: 50px;
             position: absolute;
-            will-change: transform;        /* no more top/left layout recalc */
+            will-change: transform;        
         }
 
         #ball::before {
@@ -125,7 +125,7 @@
         }
 
         #ball.slamming #fire-sprite {
-            transform: translate(-50%, -92%) scale(1.5); /* Increased scale to 1.5 */
+            transform: translate(-50%, -92%) scale(1.5); 
             opacity: 0.9;
             animation: playFire 1.0s steps(30) infinite;
         }
@@ -135,8 +135,8 @@
             width: 200px;
             height: 200px;
             left: 50%;
-            top: 120%; /* Centered with menuMeteor top */
-            transform: translate(-50%, -92%) scale(1.6); /* Increased scale to 1.6 */
+            top: 120%; 
+            transform: translate(-50%, -92%) scale(1.6); 
             transform-origin: center center;
             pointer-events: none;
             z-index: 0;
@@ -155,7 +155,7 @@
         #slamButton {
             display: none;
             user-select: none;
-            -webkit-user-select: none; /* Safari/iOS */
+            -webkit-user-select: none; 
             position: fixed;
             bottom: 50px;
             right: -120px;
@@ -572,7 +572,7 @@
             left: 0;
             width: 100%;
             height: 30px;
-            /* background replaced by image in JS */
+            
             box-shadow: 0 0 15px rgba(255, 140, 0, 0.8);
             border-radius: 4px;
             z-index: 5;
@@ -580,7 +580,7 @@
 
         .wall-block {
             height: 30px;
-            /* background replaced by image in JS */
+            
             border-bottom: 2px solid #000;
             border-radius: 4px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
@@ -804,19 +804,7 @@
             transform: translateY(4px);
             box-shadow: 0 1px 0 #000000;
         }
-        /* .score-text {
-            margin: 0 0 8px 0;
-            text-align: center;
-
-            color: rgb(0, 0, 0);
-            background-color: white;
-            font-family: "Bungee";
-            font-size: 28px;
-            border-radius: 20px;
-            border: black;
-            box-shadow: 0 5px 0 #000000;
-
-        } */
+        
 
         .score-text {
             margin: 8px auto 18px;
@@ -1173,7 +1161,7 @@
             position: absolute;
             pointer-events: none;
             z-index: 1;
-            will-change: transform, opacity;   /* animated properties */
+            will-change: transform, opacity;   
             animation: trailFade var(--dur, 0.6s) ease-out forwards;
         }
         @keyframes trailFade {
@@ -1324,7 +1312,7 @@
             border-radius: 34px;
             transition: 0.25s ease;
 
-            /* SCORE mode (default) 💵 */
+            
             background: linear-gradient(
                 90deg,
                 #2e8b57,
@@ -1451,7 +1439,7 @@
             flex: 1;
         }
 
-        /* Username Overlay */
+        
         #usernameOverlay {
             position: absolute;
             inset: 0;
@@ -1539,7 +1527,7 @@
             color: #fff;
         }
 
-        /* Settings username row */
+        
         .settings-username-row {
             display: flex;
             justify-content: space-between;
@@ -1636,7 +1624,7 @@
                 padding: 6px 10px;
             }
 
-            /* Game Over Menu Responsiveness */
+            
             .control-deck {
                 padding: 12px 15px 15px 15px !important;
                 gap: 6px !important;
@@ -1680,7 +1668,7 @@
 
 <body oncontextmenu="return false;">
 
-    <!-- Username setup overlay -->
+    
     <div id="usernameOverlay" class="hidden">
         <div class="username-panel">
             <h2>WHAT'S YOUR NAME?</h2>

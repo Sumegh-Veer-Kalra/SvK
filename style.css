@@ -1,8 +1,6 @@
-/* ==========================================================================
-   SvK Games Portal Design System
-   ========================================================================== */
 
-/* --- CSS Variables & Root Styles --- */
+
+
 :root {
     --bg-dark: #070714;
     --bg-card: rgba(22, 22, 48, 0.6);
@@ -29,7 +27,7 @@ body {
     flex-direction: column;
 }
 
-/* --- Header / Navigation --- */
+
 .main-header {
     background-color: rgba(7, 7, 20, 0.95);
     border-bottom: 1px solid var(--border-color);
@@ -48,7 +46,7 @@ body {
 }
 
 .logo {
-    font-family: var(--font-heading); /* Restore Bungee for S and K */
+    font-family: var(--font-heading); 
     font-size: 32px;
     color: var(--color-accent);
     letter-spacing: 1px;
@@ -59,8 +57,8 @@ body {
 }
 
 .logo-v {
-    font-family: var(--font-heading); /* Use the same Bungee font! */
-    font-size: 25px; /* Scale it down to simulate a lowercase v */
+    font-family: var(--font-heading); 
+    font-size: 25px; 
     margin: 0 1px;
 }
 
@@ -86,7 +84,7 @@ body {
     border-bottom: 2px solid var(--color-accent);
 }
 
-/* --- Navigation Controls & Search Bar --- */
+
 .header-controls {
     display: flex;
     align-items: center;
@@ -116,7 +114,7 @@ body {
     border-color: var(--color-accent);
     box-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
     background-color: rgba(255, 255, 255, 0.08);
-    width: 210px; /* Dynamic expansion on click */
+    width: 210px; 
 }
 
 .search-icon {
@@ -145,7 +143,7 @@ body {
     color: var(--color-neon-pink);
 }
 
-/* --- Portal Layout Container --- */
+
 .portal-container {
     flex: 1;
     max-width: 1200px;
@@ -155,7 +153,7 @@ body {
     box-sizing: border-box;
 }
 
-/* --- Hero / Featured Game Section --- */
+
 .featured-section {
     margin-bottom: 40px;
 }
@@ -198,8 +196,8 @@ body {
 }
 
 .tag-category {
-    background-color: #00ff88; /* Neon Green background */
-    color: #050515;            /* Dark text for contrast */
+    background-color: #00ff88; 
+    color: #050515;            
     font-size: 11px;
     font-weight: 800;
     padding: 4px 10px;
@@ -241,8 +239,8 @@ body {
 }
 
 .featured-media {
-    flex: 0 0 45%; /* Fixed at 45% card width */
-    aspect-ratio: 16 / 9; /* Lock container to perfect 16:9 ratio */
+    flex: 0 0 45%; 
+    aspect-ratio: 16 / 9; 
     background-color: #0c0c20;
     position: relative;
 }
@@ -258,7 +256,7 @@ body {
     opacity: 0.85;
 }
 
-/* --- Games Grid Section --- */
+
 .games-section {
     margin-top: 20px;
 }
@@ -278,7 +276,7 @@ body {
     gap: 24px;
 }
 
-/* --- Game Card Item --- */
+
 .game-card {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
@@ -299,7 +297,7 @@ body {
 
 .game-thumb-wrapper {
     width: 100%;
-    padding-top: 75%; /* 4:3 Aspect Ratio */
+    padding-top: 75%; 
     position: relative;
     background-color: #0f0f2a;
     overflow: hidden;
@@ -313,7 +311,7 @@ body {
     height: 100%;
     object-fit: cover;
     transition: transform 0.5s ease;
-    pointer-events: none; /* Disable browser-injected image hover search icons */
+    pointer-events: none; 
 }
 
 .game-card:hover .game-thumb {
@@ -337,13 +335,13 @@ body {
 }
 
 .game-meta {
-    font-size: 11px; /* Slightly smaller for cleaner visual weighting */
+    font-size: 11px; 
     color: var(--text-secondary);
     display: flex;
-    align-items: center; /* Center-align elements vertically */
+    align-items: center; 
 }
 
-/* --- Game Modal Overlay & Player --- */
+
 .game-modal {
     position: fixed;
     top: 0;
@@ -351,13 +349,13 @@ body {
     width: 100vw;
     height: 100vh;
     z-index: 2000;
-    display: none; /* Hidden by default */
+    display: none; 
     justify-content: center;
     align-items: center;
 }
 
 .game-modal.active {
-    display: flex; /* Show as flex on desktop */
+    display: flex; 
 }
 
 .modal-backdrop {
@@ -430,14 +428,14 @@ body {
     color: white;
 }
 
-/* --- Dynamic Aspect-Ratio Wrapper --- */
+
 .iframe-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: #000;
     position: relative;
-    z-index: 2; /* Sits above mobile info panel */
+    z-index: 2; 
 }
 
 .iframe-wrapper iframe {
@@ -447,25 +445,25 @@ body {
     display: block;
 }
 
-/* Portrait wrapper styling (like Drop-Off) */
+
 .iframe-wrapper.portrait {
-    width: 368px; /* Matches game-area client width perfectly */
-    height: 654px; /* Exact 9/16 ratio height for 368px */
+    width: 368px; 
+    height: 654px; 
 }
 
-/* Landscape wrapper styling */
+
 .iframe-wrapper.landscape {
     width: 800px;
-    height: 450px; /* Fixed 16/9 size */
+    height: 450px; 
 }
 
-/* Square wrapper styling */
+
 .iframe-wrapper.square {
     width: 500px;
-    height: 500px; /* Fixed 1/1 size */
+    height: 500px; 
 }
 
-/* --- Floating Close Button --- */
+
 .floating-close-btn {
     position: absolute;
     top: 15px;
@@ -478,7 +476,7 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.2);
     color: white;
     font-size: 20px;
-    display: none; /* Hidden by default on desktop */
+    display: none; 
     justify-content: center;
     align-items: center;
     cursor: pointer;
@@ -487,12 +485,12 @@ body {
 }
 
 .floating-close-btn:hover {
-    background: rgba(255, 51, 102, 0.85); /* Neon pink on hover */
+    background: rgba(255, 51, 102, 0.85); 
     border-color: var(--color-neon-pink);
     transform: scale(1.05);
 }
 
-/* --- Responsive Adjustments (Based on Screen Width) --- */
+
 @media (max-width: 768px) {
     .header-container {
         flex-direction: column;
@@ -515,10 +513,10 @@ body {
         box-sizing: border-box;
     }
     .search-wrapper input:focus {
-        width: 100%; /* Prevent stretching past mobile boundary */
+        width: 100%; 
     }
     #search-clear-btn {
-        font-size: 18px !important; /* Make cross visually larger on mobile */
+        font-size: 18px !important; 
     }
     .logo {
         font-size: 26px;
@@ -530,11 +528,11 @@ body {
         gap: 10px;
         justify-content: flex-start;
         padding-bottom: 4px;
-        -ms-overflow-style: none;  /* IE and Edge */
-        scrollbar-width: none;  /* Firefox */
+        -ms-overflow-style: none;  
+        scrollbar-width: none;  
     }
     .nav-links::-webkit-scrollbar {
-        display: none; /* Chrome, Safari, Opera */
+        display: none; 
     }
     .nav-links a {
         font-size: 13px;
@@ -551,18 +549,18 @@ body {
         font-size: 32px;
     }
     .games-grid {
-        grid-template-columns: repeat(2, 1fr); /* Force exactly 2 columns on mobile screen widths */
+        grid-template-columns: repeat(2, 1fr); 
         gap: 16px;
     }
     .game-info {
-        padding: 10px 8px !important; /* Reduce padding on mobile to reclaim horizontal space and fix cutoff */
+        padding: 10px 8px !important; 
         gap: 6px;
     }
     .game-title {
-        font-size: 14px !important; /* Scale down title for 2-column mobile cards */
+        font-size: 14px !important; 
     }
     .game-meta {
-        font-size: 10px !important; /* Scale down metadata text to fit comfortably */
+        font-size: 10px !important; 
     }
     .iframe-wrapper.landscape {
         width: 95vw;
@@ -573,9 +571,9 @@ body {
     }
 }
 
-/* --- Touchscreen Capabilities (Based on Input Mechanism) --- */
+
 @media (pointer: coarse) {
-    /* Hide the desktop header and show the floating circular close button */
+    
     .modal-header {
         display: none !important;
     }
@@ -584,12 +582,12 @@ body {
     }
 }
 
-/* --- Modal Body & Sidebar Layouts --- */
 
-/* Floating PC Sidebar (Desktop) */
+
+
 .game-sidebar {
     position: absolute;
-    right: 4%; /* Float on the right of the viewport */
+    right: 4%; 
     top: 50%;
     transform: translateY(-50%);
     width: 320px;
@@ -598,11 +596,11 @@ body {
     flex-direction: column;
     gap: 24px;
     box-sizing: border-box;
-    z-index: 2010; /* Make sure it draws over the backdrop */
+    z-index: 2010; 
     color: var(--text-primary);
-    background: transparent; /* Float on the darkened backdrop */
+    background: transparent; 
     border: none;
-    pointer-events: auto; /* Enable scroll and text highlight */
+    pointer-events: auto; 
 }
 
 .sidebar-title {
@@ -635,25 +633,25 @@ body {
     margin: 0;
 }
 
-/* Mobile Layout Overlay Below Game */
+
 .mobile-info-panel {
-    display: none; /* Hidden on desktop */
+    display: none; 
 }
 
-/* Mobile Layout Overlay Below Game (Only active on true mobile touchscreen devices) */
+
 .mobile-device .game-modal {
-    display: none; /* Hidden by default */
-    background-color: #05050f; /* Pitch black solid background to completely cover parent portal */
-    overflow-y: scroll; /* Enable page scroll on the modal overlay */
-    -webkit-overflow-scrolling: touch; /* Momentum scrolling */
-    overscroll-behavior: contain; /* Prevent background scroll chaining/leaks */
+    display: none; 
+    background-color: #05050f; 
+    overflow-y: scroll; 
+    -webkit-overflow-scrolling: touch; 
+    overscroll-behavior: contain; 
 }
 
 .mobile-device .game-modal.active {
-    display: block; /* Show as block on mobile for natural scrolling flow */
+    display: block; 
 }
 
-/* Mobile responsive wrapper overrides to prevent viewport clipping */
+
 .mobile-device .iframe-wrapper.portrait {
     width: 100%;
     max-width: 368px;
@@ -675,7 +673,7 @@ body {
     aspect-ratio: 1/1;
 }
 
-/* Force 1:1 square ratio when showing play cover to prevent crop/cut of square cover assets */
+
 .mobile-device .iframe-wrapper.showing-cover {
     aspect-ratio: 1/1 !important;
     max-width: 368px;
@@ -684,9 +682,9 @@ body {
 }
 
 .mobile-device .modal-backdrop {
-    background-color: #05050f !important; /* Solid background on backdrop */
+    background-color: #05050f !important; 
     opacity: 1 !important;
-    position: fixed; /* Keep it fixed behind the content */
+    position: fixed; 
 }
 
 .mobile-device .modal-content {
@@ -695,40 +693,40 @@ body {
     left: auto;
     transform: none;
     width: 95%;
-    max-width: 95%; /* Default fallback width */
-    max-height: none; /* Let height flow naturally with content */
-    overflow-y: visible; /* Scroll is handled by modal, not content container */
+    max-width: 95%; 
+    max-height: none; 
+    overflow-y: visible; 
     margin: 20px auto;
     display: flex;
     flex-direction: column;
-    box-shadow: none; /* No shadow needed on solid background */
-    border: none; /* Borderless for clean page-like feel */
+    box-shadow: none; 
+    border: none; 
     background: transparent;
 }
 
-/* Orientation-specific widths for mobile modal container */
+
 .mobile-device .modal-content.portrait {
-    max-width: 368px; /* Cap portrait at standard mobile size */
+    max-width: 368px; 
 }
 
 .mobile-device .modal-content.landscape {
-    max-width: 800px; /* Allow wider landscape games */
+    max-width: 800px; 
 }
 
 .mobile-device .modal-content.square {
-    max-width: 500px; /* Allow square games to fit */
+    max-width: 500px; 
 }
 
 .mobile-device .floating-close-btn {
-    position: fixed !important; /* Keep Close button fixed on screen, not scrolling away! */
+    position: fixed !important; 
     top: 15px;
     right: 15px;
-    z-index: 999999 !important; /* Draw above everything */
+    z-index: 999999 !important; 
     display: flex !important;
 }
 
 .mobile-device .game-sidebar {
-    display: none !important; /* Hide PC sidebar on true mobile */
+    display: none !important; 
 }
 
 .mobile-device .mobile-info-panel {
@@ -742,7 +740,7 @@ body {
     color: var(--text-primary);
     border-top: 1px solid var(--border-color);
     position: relative;
-    z-index: 1; /* Sits below the iframe borders */
+    z-index: 1; 
 }
 
 .mobile-device .mobile-header-row {
@@ -757,7 +755,7 @@ body {
     border-radius: 12px;
     border: 2px solid var(--border-color);
     object-fit: cover;
-    pointer-events: none; /* Disable browser image search hover menus */
+    pointer-events: none; 
 }
 
 .mobile-device .mobile-game-info {
@@ -794,7 +792,7 @@ body {
     height: 45px;
     border-radius: 6px;
     object-fit: cover;
-    pointer-events: none; /* Disable browser image search hover menus */
+    pointer-events: none; 
 }
 
 .mobile-device .similar-title {
@@ -807,14 +805,14 @@ body {
     flex: 1;
 }
 
-/* On Desktop, if the window is shrunk horizontally, hide the floating sidebar so it doesn't cover the game */
+
 @media (max-width: 1100px) {
     .desktop-device .game-sidebar {
         display: none !important;
     }
 }
 
-/* --- Mobile Play Cover --- */
+
 .mobile-play-cover {
     width: 100%;
     height: 100%;
@@ -831,7 +829,7 @@ body {
     overflow: hidden;
 }
 
-/* Add a light overlay to the background cover so the button pops */
+
 .mobile-play-cover::before {
     content: '';
     position: absolute;
@@ -839,7 +837,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(5, 5, 15, 0.3); /* Lighter tint, no blur */
+    background-color: rgba(5, 5, 15, 0.3); 
     z-index: 1;
 }
 
@@ -860,7 +858,7 @@ body {
 }
 
 .mobile-play-btn svg {
-    margin-left: 4px; /* Offset to center play arrow visually */
+    margin-left: 4px; 
 }
 
 .mobile-play-btn:hover {
@@ -879,7 +877,7 @@ body {
     text-shadow: 0 2px 10px rgba(0,0,0,0.5);
 }
 
-/* Floating Mobile Back Button inside Fullscreen */
+
 .mobile-back-btn {
     position: absolute;
     top: 15px;
@@ -894,7 +892,7 @@ body {
     border-radius: 20px;
     box-shadow: 0 0 15px rgba(255, 51, 102, 0.4);
     cursor: pointer;
-    display: none; /* Controlled by JS handleFullscreenChange */
+    display: none; 
     align-items: center;
     gap: 6px;
     letter-spacing: 1px;

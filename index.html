@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Play Free Online Games at Svk - Play Now!</title>
     <link rel="stylesheet" href="style.css?v=1.1.1">
-    <!-- Google Fonts for premium typography -->
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <!-- Header Navigation -->
+    
     <header class="main-header">
         <div class="header-container">
             <div class="logo" onclick="location.reload()">S<span class="logo-v">v</span>K</div>
@@ -32,10 +32,10 @@
         </div>
     </header>
 
-    <!-- Main Content Container -->
+    
     <main class="portal-container">
         
-        <!-- Hero / Featured Section -->
+        
         <section class="featured-section">
             <div class="featured-card" id="featured-game-card" style="display: none;">
                 <div class="featured-info">
@@ -48,31 +48,31 @@
                     <button class="play-btn-large" id="featured-play-btn">PLAY NOW</button>
                 </div>
                 <div class="featured-media">
-                    <!-- We'll display a placeholder or game art -->
+                    
                     <div class="media-placeholder" id="featured-media-img"></div>
                 </div>
             </div>
         </section>
 
-        <!-- Recently Played Section -->
+        
         <section class="games-section" id="recently-played-section" style="display: none;">
             <h2 class="section-title">Recently Played</h2>
             <div class="games-grid" id="recently-played-grid-container">
-                <!-- Dynamically populated by portal.js -->
+                
             </div>
         </section>
 
-        <!-- Games Grid Section -->
+        
         <section class="games-section">
             <h2 class="section-title" id="games-section-title">Popular Games</h2>
             <div class="games-grid" id="games-grid-container">
-                <!-- Dynamically populated by portal.js -->
+                
             </div>
         </section>
 
     </main>
 
-    <!-- Game Player Modal Overlay -->
+    
     <div id="gameModal" class="game-modal">
         <div class="modal-backdrop" onclick="portal.closeGame()"></div>
         <div class="modal-content">
@@ -85,28 +85,28 @@
                 </div>
             </div>
             <div class="iframe-wrapper" id="game-iframe-wrapper">
-                <!-- Floating Back/Close button visible inside mobile fullscreen mode -->
+                
                 <button id="mobile-back-btn" class="mobile-back-btn" onclick="portal.exitMobileFullscreen()" style="display: none;">
                     ✕ Back
                 </button>
-                <!-- Iframe injected dynamically here -->
+                
             </div>
             
-            <!-- Mobile Info Panel (shows below the game on mobile) -->
+            
             <div class="mobile-info-panel" id="game-mobile-panel">
-                <!-- Populated dynamically by JS -->
+                
             </div>
         </div>
         
-        <!-- PC Sidebar (Floats on the darkened backdrop outside modal content) -->
+        
         <div class="game-sidebar" id="game-pc-sidebar">
-            <!-- Populated dynamically by JS -->
+            
         </div>
     </div>
 
 
 
-    <!-- Portal Script -->
+    
     <script src="portal.js?v=1.0.1"></script>
 </body>
 </html>
