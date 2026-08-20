@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>The Button - SvK</title>
+    <link rel="stylesheet" href="style.css?v=31.0">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div id="stage-wrapper">
+
+        <div id="game-container">
+            
+            <div class="rivet top-left"></div>
+            <div class="rivet top-right"></div>
+            <div class="rivet bottom-left"></div>
+            <div class="rivet bottom-right"></div>
+
+            <div id="status-bar" style="justify-content: flex-end;">
+                <div id="highscore-box" class="led-display">BEST: <span id="highscore-val">000</span>/30</div>
+            </div>
+
+            <div id="timer-container">
+                <div id="timer-bar"></div>
+            </div>
+
+            <div id="display-screen-top" class="display-screen">
+                <div class="scanlines"></div>
+                <div id="instruction-box-top" class="instruction-box">PRESS TO START</div>
+            </div>
+
+            <div id="button-socket">
+                <button id="game-button" class="ready">
+                    <span class="button-surface"></span>
+                </button>
+            </div>
+
+            <div id="display-screen-bottom" class="display-screen">
+                <div class="scanlines"></div>
+                <div id="instruction-box-bottom" class="instruction-box"></div>
+            </div>
+        </div>
+
+        <div id="gameover-stage">
+            <div id="alarm-overlay"></div>
+            <div id="boom-overlay"></div>
+            
+            <div class="rivet top-left"></div>
+            <div class="rivet top-right"></div>
+            <div class="rivet bottom-left"></div>
+            <div class="rivet bottom-right"></div>
+
+            <div id="trapdoor-container">
+                <div class="trapdoor-plate plate-l"></div>
+                <div class="trapdoor-plate plate-r"></div>
+            </div>
+
+            <img id="scene-player" src="image1.png" alt="Adventurer">
+
+            <div id="gameover-hud">
+                <h1 id="gameover-title">SYSTEM FAULT</h1>
+
+                <p id="fail-ai-quote">"I literally told you: DON'T."</p>
+
+                <button id="retry-btn">REBOOT SYSTEM</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="game.js?v=46.0"></script>
+</body>
+</html>

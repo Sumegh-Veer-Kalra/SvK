@@ -11,13 +11,11 @@ class PortalController {
         this.currentIframe = null;
         this.searchQuery = "";
 
-        
         this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
                         window.matchMedia("(pointer: coarse)").matches ||
                         ('ontouchstart' in window) ||
                         (navigator.maxTouchPoints > 0);
 
-        
         if (this.isMobile) {
             document.body.classList.add("mobile-device");
         } else {
@@ -27,39 +25,63 @@ class PortalController {
         this.init();
     }
 
+    getAbsPath(path) {
+        if (!path) return "";
+        return path.startsWith("/") ? path : "/" + path;
+    }
+
     async init() {
         try {
             console.log("[Portal] Fetching games database...");
             const response = await fetch('games.json');
             this.games = await response.json();
-            
-            
+
             this.renderFeatured();
-            
-            
+
             this.renderGrid();
-            
-            
+
             this.renderRecentlyPlayed();
-            
-            
+
             this.setupCategoryFilters();
-            
-            
+
             this.setupFullscreen();
 
-            
             this.setupSearch();
 
-            
             document.addEventListener("fullscreenchange", () => this.handleFullscreenChange());
             document.addEventListener("webkitfullscreenchange", () => this.handleFullscreenChange());
+
+            this.checkRoute();
         } catch (e) {
             console.error("[Portal] Failed to load games database:", e);
         }
     }
 
-    
+    checkRoute() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const targetGame = urlParams.get('game');
+        
+        if (targetGame) {
+            const gameExists = this.games.some(g => g.id === targetGame);
+            if (gameExists) {
+                
+                this.playGame(targetGame);
+
+                window.history.replaceState(null, "", `/games/${targetGame}/`);
+            }
+        } else {
+            const path = window.location.pathname;
+            const match = path.match(/^\/games\/([^\/]+)\/?$/);
+            if (match) {
+                const gameId = match[1];
+                const gameExists = this.games.some(g => g.id === gameId);
+                if (gameExists) {
+                    this.playGame(gameId);
+                }
+            }
+        }
+    }
+
     renderFeatured() {
         const featuredGame = this.games.find(g => g.featured) || this.games[0];
         if (!featuredGame) return;
@@ -74,7 +96,7 @@ class PortalController {
         const mediaImg = document.getElementById("featured-media-img");
         const card = document.getElementById("featured-game-card");
 
-        if (tag) tag.innerText = "FEATURED GAME";
+        if (tag) tag.innerText = "NEW!";
         if (categoryTag) categoryTag.innerText = featuredGame.category.toUpperCase();
         if (title) title.innerText = featuredGame.title;
         if (desc) desc.innerText = featuredGame.description;
@@ -83,21 +105,24 @@ class PortalController {
             playBtn.onclick = () => this.playGame(featuredGame.id);
         }
         if (mediaImg) {
-            mediaImg.style.backgroundImage = `url('${featuredGame.cover_landscape}')`;
+            const imgUrl = `url('${this.getAbsPath(featuredGame.cover_landscape)}')`;
+            mediaImg.style.backgroundImage = imgUrl;
+            const featuredMedia = mediaImg.parentElement;
+            if (featuredMedia) {
+                featuredMedia.style.setProperty("--featured-bg", imgUrl);
+            }
         }
         if (card) {
             card.style.display = "flex"; 
         }
     }
 
-    
     renderGrid() {
         const grid = document.getElementById("games-grid-container");
         if (!grid) return;
 
         grid.innerHTML = "";
 
-        
         const sectionTitle = document.getElementById("games-section-title");
         if (sectionTitle) {
             if (this.searchQuery.length > 0) {
@@ -110,7 +135,6 @@ class PortalController {
             }
         }
 
-        
         const featuredCard = document.getElementById("featured-game-card");
         if (featuredCard) {
             if (this.searchQuery.length > 0) {
@@ -123,7 +147,6 @@ class PortalController {
             }
         }
 
-        
         const recentlyPlayedSection = document.getElementById("recently-played-section");
         if (recentlyPlayedSection) {
             if (this.searchQuery.length > 0) {
@@ -138,8 +161,7 @@ class PortalController {
             if (this.activeFilter !== "all" && game.category !== this.activeFilter) {
                 return false;
             }
-            
-            
+
             if (this.searchQuery.length > 0) {
                 const q = this.searchQuery;
                 const matchTitle = game.title.toLowerCase().includes(q);
@@ -164,11 +186,9 @@ class PortalController {
                 `;
                 grid.appendChild(header);
 
-                
                 const featuredList = this.games.filter(g => g.featured);
                 const recommendGames = featuredList.length > 0 ? featuredList : this.games.slice(0, 3);
 
-                
                 recommendGames.forEach(game => {
                     const card = document.createElement("div");
                     card.className = "game-card";
@@ -179,7 +199,7 @@ class PortalController {
 
                     card.innerHTML = `
                         <div class="game-thumb-wrapper">
-                            <img src="${game.thumbnail}" alt="${game.title}" class="game-thumb" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22><rect width=%22100%22 height=%22100%22 fill=%22%2311112a%22/><text x=%2250%%22 y=%2250%%22 font-family=%22sans-serif%22 font-size=%2216%22 fill=%22%23ffffff%22 text-anchor=%22middle%22 dy=%22.3em%22>${game.title}</text></svg>'">
+                            <img src="${this.getAbsPath(game.thumbnail)}" alt="${game.title}" class="game-thumb" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22><rect width=%22100%22 height=%22100%22 fill=%22%2311112a%22/><text x=%2250%%22 y=%2250%%22 font-family=%22sans-serif%22 font-size=%2216%22 fill=%22%23ffffff%22 text-anchor=%22middle%22 dy=%22.3em%22>${game.title}</text></svg>'">
                         </div>
                         <div class="game-info">
                             <h3 class="game-title">${game.title}</h3>
@@ -205,12 +225,11 @@ class PortalController {
             card.setAttribute("data-id", game.id);
             card.onclick = () => this.playGame(game.id);
 
-            
             const displayCategory = game.category.toUpperCase();
 
             card.innerHTML = `
                 <div class="game-thumb-wrapper">
-                    <img src="${game.thumbnail}" alt="${game.title}" class="game-thumb" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22><rect width=%22100%22 height=%22100%22 fill=%22%2311112a%22/><text x=%2250%%22 y=%2250%%22 font-family=%22sans-serif%22 font-size=%2216%22 fill=%22%23ffffff%22 text-anchor=%22middle%22 dy=%22.3em%22>${game.title}</text></svg>'">
+                    <img src="${this.getAbsPath(game.thumbnail)}" alt="${game.title}" class="game-thumb" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22><rect width=%22100%22 height=%22100%22 fill=%22%2311112a%22/><text x=%2250%%22 y=%2250%%22 font-family=%22sans-serif%22 font-size=%2216%22 fill=%22%23ffffff%22 text-anchor=%22middle%22 dy=%22.3em%22>${game.title}</text></svg>'">
                 </div>
                 <div class="game-info">
                     <h3 class="game-title">${game.title}</h3>
@@ -225,47 +244,41 @@ class PortalController {
         });
     }
 
-    
     setupCategoryFilters() {
         const filters = document.querySelectorAll(".nav-links a");
         filters.forEach(link => {
             link.addEventListener("click", (e) => {
                 e.preventDefault();
-                
-                
+
                 filters.forEach(f => f.classList.remove("active"));
                 link.classList.add("active");
 
-                
                 this.activeFilter = link.getAttribute("data-filter");
                 this.renderGrid();
             });
         });
     }
 
-    
     playGame(gameId) {
         const game = this.games.find(g => g.id === gameId);
         if (!game) return;
 
+        window.history.replaceState(null, "", `/games/${gameId}/`);
+
         console.log(`[Portal] Launching game: ${game.title} (${game.orientation})`);
-        
-        
+
         document.body.style.overflow = "hidden";
-        
-        
+
         this.wrapper.className = "iframe-wrapper";
         
         this.wrapper.classList.add(game.orientation);
 
-        
         const modalContent = this.modal.querySelector(".modal-content");
         if (modalContent) {
             modalContent.className = "modal-content"; 
             modalContent.classList.add(game.orientation);
         }
 
-        
         this.modalTitle.innerText = game.title.toUpperCase();
 
         const isMobile = this.isMobile;
@@ -274,7 +287,7 @@ class PortalController {
             this.wrapper.classList.add("showing-cover");
             
             this.wrapper.innerHTML = `
-                <div class="mobile-play-cover" style="background-image: url('${game.cover_square}');" onclick="portal.startMobileGame('${game.id}')">
+                <div class="mobile-play-cover" style="background-image: url('${this.getAbsPath(game.cover_square)}');" onclick="portal.startMobileGame('${game.id}')">
                     <div class="mobile-play-btn">
                         <svg viewBox="0 0 24 24" width="36" height="36" fill="currentColor">
                             <path d="M8 5v14l11-7z"/>
@@ -286,25 +299,36 @@ class PortalController {
             this.currentIframe = null;
         } else {
             const cacheBuster = Date.now();
-            
+            const absolutePath = game.path.startsWith("/") ? game.path : "/" + game.path;
             this.wrapper.innerHTML = `
-                <iframe src="${game.path}?v=${cacheBuster}" 
+                <iframe src="${absolutePath}?v=${cacheBuster}" 
                         id="active-game-iframe"
                         allow="autoplay; keyboard; fullscreen; clipboard-write"
                         scrolling="no">
                 </iframe>
             `;
             this.currentIframe = document.getElementById("active-game-iframe");
-            
-            
+
             this.addToRecentlyPlayed(gameId);
         }
 
-        
         const pcSidebar = document.getElementById("game-pc-sidebar");
-        if (pcSidebar) {
-            pcSidebar.innerHTML = `
-                <h3 class="sidebar-title">${game.title}</h3>
+        
+        const oldInline = document.getElementById("game-pc-sidebar-inline");
+        if (oldInline) oldInline.remove();
+
+        const isLandscapeDesktop = !this.isMobile && game.orientation === "landscape";
+
+        if (isLandscapeDesktop) {
+            
+            if (pcSidebar) {
+                pcSidebar.innerHTML = "";
+                pcSidebar.classList.add("landscape-mode");
+            }
+
+            const inlinePanel = document.createElement("div");
+            inlinePanel.id = "game-pc-sidebar-inline";
+            inlinePanel.innerHTML = `
                 <div class="sidebar-section">
                     <span class="sidebar-section-title">Description</span>
                     <p class="sidebar-section-text">${game.description}</p>
@@ -314,9 +338,25 @@ class PortalController {
                     <p class="sidebar-section-text">${game.controls}</p>
                 </div>
             `;
+            if (modalContent) modalContent.appendChild(inlinePanel);
+        } else {
+            
+            if (pcSidebar) {
+                pcSidebar.classList.remove("landscape-mode");
+                pcSidebar.innerHTML = `
+                    <h3 class="sidebar-title">${game.title}</h3>
+                    <div class="sidebar-section">
+                        <span class="sidebar-section-title">Description</span>
+                        <p class="sidebar-section-text">${game.description}</p>
+                    </div>
+                    <div class="sidebar-section">
+                        <span class="sidebar-section-title">Controls</span>
+                        <p class="sidebar-section-text">${game.controls}</p>
+                    </div>
+                `;
+            }
         }
 
-        
         const mobilePanel = document.getElementById("game-mobile-panel");
         if (mobilePanel) {
             
@@ -338,7 +378,7 @@ class PortalController {
                         <div class="mobile-similar-grid">
                             ${similarGames.map(sim => `
                                 <div class="similar-game-card" onclick="portal.playGame('${sim.id}')">
-                                    <img src="${sim.thumbnail}" alt="${sim.title}" class="similar-thumb">
+                                    <img src="${this.getAbsPath(sim.thumbnail)}" alt="${sim.title}" class="similar-thumb">
                                     <span class="similar-title">${sim.title}</span>
                                 </div>
                             `).join("")}
@@ -349,7 +389,7 @@ class PortalController {
 
             mobilePanel.innerHTML = `
                 <div class="mobile-header-row">
-                    <img src="${game.thumbnail}" alt="${game.title}" class="mobile-thumb-img">
+                    <img src="${this.getAbsPath(game.thumbnail)}" alt="${game.title}" class="mobile-thumb-img">
                     <div class="mobile-game-info">
                         <h3 class="sidebar-title" style="border:none; padding:0; margin:0; font-size:16px;">${game.title}</h3>
                         <span style="color:var(--color-neon-pink); font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1px;">${game.category}</span>
@@ -370,10 +410,8 @@ class PortalController {
             `;
         }
 
-        
         this.modal.classList.add("active");
 
-        
         setTimeout(() => {
             if (this.currentIframe) {
                 this.currentIframe.focus();
@@ -385,7 +423,6 @@ class PortalController {
             }
         }, 150);
 
-        
         this.wrapper.onclick = () => {
             if (this.currentIframe) {
                 this.currentIframe.focus();
@@ -393,12 +430,10 @@ class PortalController {
         };
     }
 
-    
     playFeatured(gameId) {
         this.playGame(gameId);
     }
 
-    
     startMobileGame(gameId) {
         const game = this.games.find(g => g.id === gameId);
         if (!game) return;
@@ -408,12 +443,12 @@ class PortalController {
         this.wrapper.classList.remove("showing-cover");
 
         const cacheBuster = Date.now();
-        
+        const absolutePath = game.path.startsWith("/") ? game.path : "/" + game.path;
         this.wrapper.innerHTML = `
             <button id="mobile-back-btn" class="mobile-back-btn" onclick="portal.exitMobileFullscreen()" style="display: none;">
                 ✕ Back
             </button>
-            <iframe src="${game.path}?v=${cacheBuster}" 
+            <iframe src="${absolutePath}?v=${cacheBuster}" 
                     id="active-game-iframe"
                     allow="autoplay; keyboard; fullscreen; clipboard-write"
                     scrolling="no">
@@ -421,10 +456,8 @@ class PortalController {
         `;
         this.currentIframe = document.getElementById("active-game-iframe");
 
-        
         this.addToRecentlyPlayed(gameId);
 
-        
         if (this.wrapper.requestFullscreen) {
             this.wrapper.requestFullscreen().catch(err => console.error(err));
         } else if (this.wrapper.webkitRequestFullscreen) { 
@@ -433,7 +466,6 @@ class PortalController {
             this.wrapper.msRequestFullscreen();
         }
 
-        
         setTimeout(() => {
             if (this.currentIframe) {
                 this.currentIframe.focus();
@@ -444,27 +476,23 @@ class PortalController {
         }, 150);
     }
 
-    
     closeGame() {
         console.log("[Portal] Closing active game player.");
-        
-        
+
         document.body.style.overflow = "";
-        
-        
+
         this.wrapper.innerHTML = "";
         this.currentIframe = null;
 
-        
         this.modal.classList.remove("active");
-        
-        
+
         if (document.fullscreenElement) {
             document.exitFullscreen().catch(err => console.log(err));
         }
+
+        window.history.replaceState(null, "", "/");
     }
 
-    
     setupFullscreen() {
         this.fullscreenBtn.addEventListener("click", () => {
             const iframe = document.getElementById("active-game-iframe");
@@ -485,7 +513,6 @@ class PortalController {
         });
     }
 
-    
     exitMobileFullscreen() {
         console.log("[Portal] Exit fullscreen button tapped.");
         if (document.exitFullscreen) {
@@ -497,11 +524,9 @@ class PortalController {
         }
     }
 
-    
     handleFullscreenChange() {
         const isFullscreen = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
-        
-        
+
         const backBtn = document.getElementById("mobile-back-btn");
         if (backBtn) {
             backBtn.style.display = isFullscreen ? "flex" : "none";
@@ -509,8 +534,7 @@ class PortalController {
 
         if (!isFullscreen && this.isMobile) {
             console.log("[Portal] Exited fullscreen on mobile. Stopping game and restoring play cover.");
-            
-            
+
             const activeIframe = document.getElementById("active-game-iframe");
             if (activeIframe) {
                 
@@ -537,7 +561,6 @@ class PortalController {
         }
     }
 
-    
     setupSearch() {
         const searchInput = document.getElementById("search-input");
         const clearBtn = document.getElementById("search-clear-btn");
@@ -545,13 +568,11 @@ class PortalController {
 
         searchInput.addEventListener("input", (e) => {
             this.searchQuery = e.target.value.toLowerCase().trim();
-            
-            
+
             if (clearBtn) {
                 clearBtn.style.display = this.searchQuery.length > 0 ? "block" : "none";
             }
-            
-            
+
             this.renderGrid();
         });
 
@@ -566,7 +587,6 @@ class PortalController {
         }
     }
 
-    
     forceMobileMode() {
         console.log("[Portal Developer Tools] Forcing mobile mode...");
         this.isMobile = true;
@@ -577,7 +597,6 @@ class PortalController {
         this.renderRecentlyPlayed();
     }
 
-    
     addToRecentlyPlayed(gameId) {
         let list = [];
         try {
@@ -589,13 +608,10 @@ class PortalController {
             console.error("[Portal] Failed to parse recently played list:", e);
         }
 
-        
         list = list.filter(id => id !== gameId);
 
-        
         list.unshift(gameId);
 
-        
         list = list.slice(0, 5);
 
         try {
@@ -604,7 +620,6 @@ class PortalController {
             console.error("[Portal] Failed to save recently played list:", e);
         }
 
-        
         this.renderRecentlyPlayed();
     }
 
@@ -623,13 +638,11 @@ class PortalController {
             console.error(e);
         }
 
-        
         if (list.length === 0) {
             section.style.display = "none";
             return;
         }
 
-        
         const playedGames = list
             .map(id => this.games.find(g => g.id === id))
             .filter(Boolean);
@@ -652,7 +665,7 @@ class PortalController {
 
             card.innerHTML = `
                 <div class="game-thumb-wrapper">
-                    <img src="${game.thumbnail}" alt="${game.title}" class="game-thumb" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22><rect width=%22100%22 height=%22100%22 fill=%22%2311112a%22/><text x=%2250%%22 y=%2250%%22 font-family=%22sans-serif%22 font-size=%2216%22 fill=%22%23ffffff%22 text-anchor=%22middle%22 dy=%22.3em%22>${game.title}</text></svg>'">
+                    <img src="${this.getAbsPath(game.thumbnail)}" alt="${game.title}" class="game-thumb" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22><rect width=%22100%22 height=%22100%22 fill=%22%2311112a%22/><text x=%2250%%22 y=%2250%%22 font-family=%22sans-serif%22 font-size=%2216%22 fill=%22%23ffffff%22 text-anchor=%22middle%22 dy=%22.3em%22>${game.title}</text></svg>'">
                 </div>
                 <div class="game-info">
                     <h3 class="game-title">${game.title}</h3>
@@ -668,12 +681,10 @@ class PortalController {
     }
 }
 
-
 let portal;
 window.addEventListener("DOMContentLoaded", () => {
     portal = new PortalController();
-    
-    
+
     window.mode = {
         mobile: function() {
             if (portal) {

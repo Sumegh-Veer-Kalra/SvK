@@ -8,10 +8,10 @@
     "thumbnail": "games/drop-off/cover_square.png",
     "cover_square": "games/drop-off/cover_square.png",
     "cover_landscape": "games/drop-off/cover_landscape.png",
-    "path": "games/drop-off/index.html",
+    "path": "games/drop-off/game.html",
     "description": "Avoid obstacles, slam down, collect coins, and survive the endless fall!",
     "controls": "Keyboard: A/D or Left/Right Arrow keys to move left/right. Spacebar to slam. Mouse/Touch: Tap or click the left/right side of the screen to move, and use the orange SLAM button to crash down.",
-    "featured": true,
+    "featured": false,
     "tags": [
       "endless",
       "fall",
@@ -23,6 +23,30 @@
       "survive",
       "brick",
       "obstacle"
+    ]
+  },
+  {
+    "id": "the-button",
+    "title": "The Button",
+    "category": "mind",
+    "orientation": "landscape",
+    "aspectRatio": "16/9",
+    "thumbnail": "games/the-button/cover_square.png",
+    "cover_square": "games/the-button/cover_square.png",
+    "cover_landscape": "games/the-button/cover_landscape.png",
+    "path": "games/the-button/game.html",
+    "description": "Press the red button, obey chaotic factory commands, survive trapdoors, and blow up the enemy base!",
+    "controls": "Mouse/Touch: Tap or click the giant red button according to the LCD display instructions. Obey color matches, countdowns, and trap warnings!",
+    "featured": true,
+    "tags": [
+      "button",
+      "reflex",
+      "arcade",
+      "factory",
+      "challenge",
+      "puzzle",
+      "action",
+      "survival"
     ]
   }
 ]

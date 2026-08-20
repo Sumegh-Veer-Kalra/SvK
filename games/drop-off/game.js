@@ -7,15 +7,10 @@ const gameStorage = {
     removeItem: (key) => localStorage.removeItem(key)
 };
 
-
-
-
-
 const ball = document.getElementById('ball');
 const gameArea = document.querySelector('.game-area');
 const gameSurface = document.getElementById('gameSurface') || gameArea; 
 const countdownOverlay = document.getElementById('countdownOverlay');
-
 
 const pauseMenuOverlay = document.getElementById('pauseMenuOverlay');
 const pauseScoreDisplay = document.getElementById('pauseScoreDisplay');
@@ -28,12 +23,8 @@ const closeSettingsBtn = document.getElementById('closeSettingsBtn');
 const sfxToggle = document.getElementById('sfxToggle');
 const shakeToggle = document.getElementById('shakeToggle');
 
-
-
 let sfxEnabled = gameStorage.getItem('sfxEnabled') !== 'false';
 let shakeEnabled = gameStorage.getItem('shakeEnabled') !== 'false';
-
-
 
 sfxToggle.checked = sfxEnabled;
 shakeToggle.checked = shakeEnabled;
@@ -157,7 +148,6 @@ const SFX = (() => {
         const gain = audioCtx.createGain();
         osc.type = 'square';
 
-        
         if (step === 5) {
             osc.frequency.value = 350;
             gain.gain.setValueAtTime(0.1, now);
@@ -205,7 +195,6 @@ const SFX = (() => {
 let currentScore = 0;
 let lastBackgroundScore = 0;
 
-
 let lastScorePhase = -1;
 
 const bgLayer = document.getElementById('bgLayer');
@@ -219,7 +208,6 @@ if (bgLayer) {
     `;
     bgLayer.style.backgroundSize = '180px 180px, 230px 230px, 160px 160px, 200px 200px, 100% 70px';
 }
-
 
 let bgPhase = 0;
 
@@ -258,7 +246,6 @@ function updateBackground() {
     }
 }
 
-
 const gameOverPhrases = {
     highSpeed: ["WHY MEEE!", "TOO FAST!", "MELTDOWN", "OVERHEATED", "LIGHTSPEED ENGINE CRASH", "ONE OF THOSE DAYS","JUST MISSED!", "SO CLOSE!", "DIDN'T SEE IT COMING", "OH, NO..."],
     breakableWall: ["BRICKED IT", "NEED MORE SLAM POWER", "SMASH FAIL", "ONE OF THOSE DAYS","JUST MISSED!", "SO CLOSE!", "DIDN'T SEE IT COMING"],
@@ -280,7 +267,6 @@ let startY = 0;
 
 let AREA_WIDTH = gameArea.clientWidth;
 const BALL_SIZE = 40;
-
 
 const WALL_ASSET = "obstacles/brick.png";           
 const BREAKABLE_ASSET = "obstacles/cracked_brick.png"; 
@@ -321,9 +307,6 @@ let obstaclesUntilNextPattern = Math.floor(Math.random() * 13) + 3;
 let normalCount = 0;
 let targetForBreakable = Math.floor(Math.random() * 6) + 5;
 let dynamicSpeedX = 5.0;
-
-
-
 
 const MENU_AI_SCRIPT = [
     { ballX:130, gapX:110, gapWidth:160, step:270 },
@@ -409,7 +392,6 @@ const MENU_AI_SCRIPT = [
 
 let menuAiStep = 0;
 
-
 function gameLoop() {
     const now = Date.now();
     const deltaTime = (now - lastFrameTime) / 1000;
@@ -432,7 +414,6 @@ function gameLoop() {
             currentBase = currentBaseSpeed; 
         }
 
-        
         let SLAM_SPEED_BOOST = 6.0 / currentBase;
 
         if (currentBase >= 6.0) {
@@ -475,7 +456,6 @@ function gameLoop() {
             }
         }
 
-        
         if (gameState === "transition") {
             countdownETA = Math.max(0, countdownETA - deltaTime);
             
@@ -503,7 +483,6 @@ function gameLoop() {
             }
         }
 
-        
         if (isPressingSlam) {
             slamProgress = Math.min(1, slamProgress + (deltaTime / TRANSITION_TIME));
         } else {
@@ -519,7 +498,6 @@ function gameLoop() {
             SFX.jetStop();    
         }
 
-        
         let dynamicBoost = 1 + (Math.max(0, SLAM_SPEED_BOOST - 1) * slamProgress);
         FALL_SPEED = currentBase * dynamicBoost;
         
@@ -532,17 +510,14 @@ function gameLoop() {
             updateBackground();
         }
 
-        
         if (x < 0) x = 0;
         if (x > AREA_WIDTH - BALL_SIZE) x = AREA_WIDTH - BALL_SIZE;
 
         const currentDip = 15 + (7 * slamProgress);
         const dynamicBallY = window.innerHeight * (currentDip / 100);
 
-        
         ball.style.transform = `translate3d(${Math.round(x)}px, ${Math.round(dynamicBallY)}px, 0)`;
 
-        
         const currentScale = 1 - (0.1 * slamProgress);
         let shakeX = 0;
         let shakeY = 0;
@@ -562,7 +537,6 @@ function gameLoop() {
             bgL.style.transform = `translate3d(0, ${Math.round(-worldY)}px, 0)`;
         }
 
-        
         const ballHitbox = {
             x: x + 8,
             y: dynamicBallY + 8,
@@ -572,7 +546,6 @@ function gameLoop() {
 
         const FIXED_ANCHOR = window.innerHeight * 0.15; 
 
-        
         obstacles.forEach(ob => {
             if (!ob.broken) {
                 let obScreenY = (ob.y - worldY) + FIXED_ANCHOR;
@@ -605,7 +578,6 @@ function gameLoop() {
             }
         });
 
-        
         trailFrameCount++;
         if (activeTrail) {
             const spawnRate = activeTrail === 'lightning' ? 1 : activeTrail === 'binary' ? 2 : activeTrail === 'sparks' ? 1 : activeTrail === 'ice' ? 1 : activeTrail === 'smoke' ? 1 : activeTrail === 'void' ? 1 : activeTrail === 'galaxy' ? 1 : 2;
@@ -622,7 +594,6 @@ function gameLoop() {
     renderObstacles();
     requestAnimationFrame(gameLoop);
 }
-
 
 function addBreather(isExit = false) {
     for (let i = 0; i < 2; i++) {
@@ -695,7 +666,6 @@ function spawnObstacle() {
     let obstacleData = null;
     let customStep = 260; 
 
-    
     if (gameState === "menu_ai") {
         menuAiStep++;
         const entry = MENU_AI_SCRIPT[menuAiStep % MENU_AI_SCRIPT.length];
@@ -742,7 +712,6 @@ function spawnObstacle() {
         return;
     }
 
-    
     if (patternQueue.length > 0) {
         obstacleData = patternQueue.shift();
         if (obstacleData && obstacleData.step) customStep = obstacleData.step;
@@ -763,8 +732,7 @@ function spawnObstacle() {
         }
         
         obstaclesUntilNextPattern = Math.floor(Math.random() * 5) + 15; 
-        
-        
+
         pointsSinceLastBreakable += 5;
         
         obstacleData = patternQueue.shift();
@@ -773,8 +741,7 @@ function spawnObstacle() {
     
     else {
         obstaclesUntilNextPattern--;
-        
-        
+
         pointsSinceLastBreakable += 1;
         
         let gapWidth = Math.max(BALL_SIZE * 2.5, 120 - (currentBaseSpeed * 2));
@@ -788,10 +755,6 @@ function spawnObstacle() {
         };
     }
 
-    
-    
-    
-    
     if (patternQueue.length === 0 && pointsSinceLastBreakable >= nextBreakableTarget) {
         obstacleData = {
             isDouble: false,
@@ -805,20 +768,13 @@ function spawnObstacle() {
         nextBreakableTarget = Math.floor(Math.random() * 11) + 5; 
     }
 
-    
     if (!obstacleData) return;
 
-    
-    
     if (obstacleData.type && currentBaseSpeed > 3.0) {
         let patternScale = 1 + ((currentBaseSpeed - 3.0) / 6.0); 
         customStep = Math.round(customStep * patternScale);
     }
-    
 
-    
-    
-    
     let obElement = document.createElement('div');
     obElement.classList.add('obstacle');
     
@@ -874,7 +830,6 @@ function spawnObstacle() {
         }
     }
 
-    
     gameSurface.appendChild(obElement);
     obstacles.push({
         y: nextSpawnY,
@@ -892,7 +847,6 @@ function renderObstacles() {
         let ob = obstacles[i];
         let screenY = (ob.y - worldY) + ballOffset;
 
-        
         ob.element.style.transform = `translate3d(0, ${Math.round(screenY)}px, 0)`;
 
         if (screenY < -100) {
@@ -915,23 +869,18 @@ function gameOver(hitObstacle) {
     const ballCenterX = (ballRect.left - areaRect.left) + (ballRect.width / 2);
     const ballCenterY = (ballRect.top - areaRect.top) + (ballRect.height / 2);
 
-    
     gameOverOverlay.style.setProperty('--mask-x', ballCenterX + 'px');
     gameOverOverlay.style.setProperty('--mask-y', ballCenterY + 'px');
 
-    
     gameOverOverlay.innerHTML = ''; 
     gameOverOverlay.style.display = 'block';
 
-    
     const gapAngle = 75 + Math.random() * 30; 
-    
-    
+
     createTrapLine(ballCenterX, ballCenterY, gapAngle + 90, 55);
     createTrapLine(ballCenterX, ballCenterY, gapAngle + 180, 55);
     createTrapLine(ballCenterX, ballCenterY, gapAngle + 270, 55);
 
-    
     if (!hitObstacle) {
         const currentDip = 15 + (7 * slamProgress);
         const ballTopScreen = window.innerHeight * (currentDip / 100);
@@ -973,7 +922,6 @@ function gameOver(hitObstacle) {
     banner.style.left = bannerX + 'px';
     banner.style.top = bannerY + 'px';
 
-    
     const expectedDeckHeight = window.innerHeight < 680 ? 240 : 450;
     const deckTop = window.innerHeight - expectedDeckHeight;
     const bannerHeight = window.innerHeight < 680 ? 36 : 48;
@@ -1009,7 +957,6 @@ function gameOver(hitObstacle) {
     const row = document.createElement('div');
     row.classList.add('deck-row');
 
-    
     const retryBtn = document.createElement('button');
     retryBtn.classList.add('deck-btn', 'retry');
     retryBtn.innerText = 'RE-TRY!';
@@ -1023,7 +970,6 @@ function gameOver(hitObstacle) {
         resetGameEngine(false);
     });
 
-    
     const homeBtn = document.createElement('button');
     homeBtn.classList.add('deck-btn', 'home');
     homeBtn.innerText = 'HOME';
@@ -1033,7 +979,6 @@ function gameOver(hitObstacle) {
         resetGameEngine(true);
     });
 
-    
     const reviveBtn = document.createElement('button');
     reviveBtn.classList.add('deck-btn', 'revive');
     reviveBtn.innerText = '📺 REVIVE';
@@ -1043,7 +988,6 @@ function gameOver(hitObstacle) {
         revivePlayer();
     });
 
-    
     row.appendChild(homeBtn);
     row.appendChild(retryBtn);
     deckContainer.appendChild(scoreText);
@@ -1113,16 +1057,13 @@ function resetGameEngine(goToMenu) {
         doubleCoinsUsed = false;   
     }
 
-    
     obstacles.forEach(ob => ob.element.remove());
     obstacles = [];
     patternQueue = [];
-    
-    
+
     gameOverOverlay.innerHTML = '';
     gameOverOverlay.style.display = 'none';
 
-    
     x = 170;
     worldY = 0;
     speedX = 0;
@@ -1133,7 +1074,6 @@ function resetGameEngine(goToMenu) {
     isPressingSlam = false;
     menuAiStep = 0;
 
-    
     ball.style.transform = `translate3d(${Math.round(x)}px, ${Math.round(window.innerHeight * 0.15)}px, 0)`;
     ball.classList.remove('slamming');
 
@@ -1167,8 +1107,7 @@ function revivePlayer() {
     SFX.failStop()
     gameOverOverlay.innerHTML = '';
     gameOverOverlay.style.display = 'none';
-    
-    
+
     obstacles.forEach(ob => {
         if (Math.abs(ob.y - worldY) < 350) {
             ob.element.remove();
@@ -1177,7 +1116,6 @@ function revivePlayer() {
     });
     obstacles = obstacles.filter(ob => !ob.broken);
 
-    
     isPaused = false;
     gameState = "playing";
     isPressingSlam = false;
@@ -1188,26 +1126,21 @@ function revivePlayer() {
 function createTrapLine(centerX, centerY, angle, distance) {
     const line = document.createElement('div');
     line.classList.add('trap-line');
-    
-    
+
     const width = 90 + Math.random() * 30; 
     line.style.width = width + 'px';
-    
-    
+
     const rad = angle * (Math.PI / 180);
     const lineX = centerX + Math.cos(rad) * distance - (width / 2);
     const lineY = centerY + Math.sin(rad) * distance - 10; 
     
     line.style.left = lineX + 'px';
     line.style.top = lineY + 'px';
-    
-    
+
     const tangentAngle = angle + 90 + (Math.random() * 30 - 15);
-    
-    
+
     line.style.setProperty('--angle', tangentAngle + 'deg');
-    
-    
+
     line.style.animationDelay = (Math.random() * 0.15) + 's';
     
     gameOverOverlay.appendChild(line);
@@ -1230,7 +1163,6 @@ function triggerGameStart(e) {
 
         const ballScreenY = window.innerHeight * 0.15;
 
-        
         for (let i = obstacles.length - 1; i >= 0; i--) {
             let ob = obstacles[i];
             let obScreenY = (ob.y - worldY) + ballScreenY;
@@ -1241,13 +1173,10 @@ function triggerGameStart(e) {
             }
         }
 
-        
-        
         if (obstacles.length > 0) {
             let lowestOb = obstacles.reduce((max, ob) => ob.y > max.y ? ob : max, obstacles[0]);
             let currentObScreenY = (lowestOb.y - worldY) + ballScreenY;
-            
-            
+
             let distanceToClear = currentObScreenY + 40; 
             
             if (distanceToClear > 0) {
@@ -1261,7 +1190,6 @@ function triggerGameStart(e) {
             countdownETA = 0;
         }
 
-        
         if (countdownETA > 0) {
             countdownOverlay.style.display = 'block';
             countdownOverlay.innerText = Math.ceil(countdownETA);
@@ -1293,7 +1221,6 @@ function togglePauseGame() {
     }
 }
 
-
 function handlePauseButtonInteraction(e) {
     e.stopPropagation();
     e.preventDefault();
@@ -1304,7 +1231,6 @@ document.getElementById('mobilePauseButton').addEventListener('pointerdown', (e)
     SFX.click();
     handlePauseButtonInteraction(e);
 });
-
 
 resumeBtn.addEventListener('click', () => {
     SFX.click();
@@ -1418,7 +1344,6 @@ document.getElementById('slamButton').addEventListener('mouseup', (e) => {
     isPressingSlam = false;
 });
 
-
 sfxToggle.addEventListener('change', (e) => { 
     SFX.click();
     sfxEnabled = e.target.checked; 
@@ -1462,12 +1387,8 @@ closeSettingsBtn.addEventListener('pointerdown', () => {
     closeSettingsMenu();
 });
 
-
-
-
 const skinStyleSheet = document.createElement("style");
 skinStyleSheet.innerText = `
-    /* Live Game Ball Texture Mapping */
     #ball::before { 
         background-image: var(--skin-image) !important; 
         background-size: cover !important;
@@ -1476,7 +1397,6 @@ skinStyleSheet.innerText = `
         border-radius: 50%;
     }
 
-    /* Showroom Preview Sprite Auto-Layout (Seated right above your 135px floor shadow) */
     #srSkinPreview {
         position: absolute;
         bottom: 165px; 
@@ -1491,7 +1411,6 @@ skinStyleSheet.innerText = `
     }
 `;
 document.head.appendChild(skinStyleSheet);
-
 
 const SKINS_DB = [
     { id: "default", name: "Meteor (Default)", cost: 0, image: "skins/meteor.png" }, 
@@ -1643,7 +1562,6 @@ if (!activeSkin) {
 
 let currentSkinIndex = 0;
 
-
 const skinsShowroom = document.getElementById('skinsShowroom');
 const skinsBtn = document.getElementById('skinsBtn');
 const closeSkinsBtn = document.getElementById('closeSkinsBtn');
@@ -1651,7 +1569,6 @@ const srActiveSkinName = document.getElementById('srActiveSkinName');
 const srNavLeft = document.getElementById('srNavLeft');
 const srNavRight = document.getElementById('srNavRight');
 const srActionBtn = document.getElementById('srActionBtn');
-
 
 let srSkinPreview = document.getElementById('srSkinPreview');
 if (!srSkinPreview) {
@@ -1666,7 +1583,6 @@ if (!srSkinPreview) {
     }
 }
 
-
 function applyActiveSkinStyle() {
     if (!ball) return;
     const currentSkin = SKINS_DB.find(s => s.id === activeSkin);
@@ -1675,23 +1591,19 @@ function applyActiveSkinStyle() {
     }
 }
 
-
 function updateSkinsShowroomUI() {
     const currentSkin = SKINS_DB[currentSkinIndex];
     if (!currentSkin) return;
 
-    
     if (srActiveSkinName) {
         srActiveSkinName.innerText = currentSkin.name;
     }
 
-    
     const coinTextElement = document.getElementById('srCoinText');
     if (coinTextElement) {
         coinTextElement.innerText = String(totalCoins).padStart(4, '0');
     }
 
-    
     if (srSkinPreview) {
         srSkinPreview.src = currentSkin.image;
         srSkinPreview.style.transform = 'translateX(-50%) scale(1.15)';
@@ -1700,7 +1612,6 @@ function updateSkinsShowroomUI() {
         }, 120);
     }
 
-    
     if (srActionBtn) {
         if (activeSkin === currentSkin.id) {
             srActionBtn.innerText = "EQUIPPED";
@@ -1721,7 +1632,6 @@ function updateSkinsShowroomUI() {
     }
 }
 
-
 function handleActionBtnInteraction(e) {
     SFX.click();
     if (e) e.preventDefault();
@@ -1730,7 +1640,6 @@ function handleActionBtnInteraction(e) {
 
     if (activeSkin === currentSkin.id) return;
 
-    
     if (unlockedSkins.includes(currentSkin.id)) {
         activeSkin = currentSkin.id;
         gameStorage.setItem('activeSkin', activeSkin);
@@ -1770,7 +1679,6 @@ function handleActionBtnInteraction(e) {
     }
 }
 
-
 function navigateShowroom(direction) {
     SFX.click();
     if (direction === 'left') {
@@ -1780,7 +1688,6 @@ function navigateShowroom(direction) {
     }
     updateSkinsShowroomUI();
 }
-
 
 function openSkinsMenu() {
     SFX.click();
@@ -1843,7 +1750,6 @@ srNavRight.addEventListener('touchstart', (e) => { e.preventDefault(); navigateS
 srActionBtn.addEventListener('click', handleActionBtnInteraction);
 srActionBtn.addEventListener('touchstart', handleActionBtnInteraction);
 
-
 const FAKE_NAMES = [
     "xX_Bl4ze_Xx","NovaSurge","DropKing99","IronFalcon","ZeroGravity",
     "SlipStream","VoidRunner","CrashLord","BlazeWulf","PixelReaper",
@@ -1882,7 +1788,6 @@ function generateFakePlayers() {
         else if (tier < 0.85)  score = Math.floor(rng() * 600) + 450;
         else                   score = Math.floor(rng() * 800) + 1000;
 
-        
         const streak = Math.floor(Math.pow(rng(), 2) * 40) + 1;
 
         players.push({ name: FAKE_NAMES[i], score, streak, fake: true });
@@ -1961,14 +1866,12 @@ function updateFakePlayersForToday() {
     gameStorage.setItem('fakePlayersLastProgressDate', today);
 }
 
-
 let fakePlayers = JSON.parse(gameStorage.getItem('fakePlayers'));
 if (!fakePlayers || fakePlayers.length !== 49) {
     fakePlayers = generateFakePlayers();
     gameStorage.setItem('fakePlayers', JSON.stringify(fakePlayers));
 }
 updateFakePlayersForToday();
-
 
 let playerHighScore = parseInt(gameStorage.getItem('playerHighScore')) || 0;
 let playerStreak = parseInt(gameStorage.getItem('playerStreak')) || 0;
@@ -2010,7 +1913,6 @@ function updateHighScoreIfNeeded(runScore) {
     }
 }
 
-
 let playerName = gameStorage.getItem('playerName') || null;
 
 function openUsernameOverlay(onDone) {
@@ -2033,7 +1935,6 @@ function openUsernameOverlay(onDone) {
         if (onDone) onDone();
     }
 
-    
     const newConfirm = confirm.cloneNode(true);
     const newSkip    = skip.cloneNode(true);
     confirm.parentNode.replaceChild(newConfirm, confirm);
@@ -2065,8 +1966,6 @@ function updateSettingsNameDisplay() {
     if (el) el.innerText = playerName || 'YOU';
 }
 
-
-
 (async function initUser() {
     
     if (!localStorage.getItem('playerName')) {
@@ -2077,12 +1976,10 @@ function updateSettingsNameDisplay() {
 })();
 updateMenuStats();
 
-
 document.getElementById('settingsChangeNameBtn').addEventListener('click', () => {
     closeSettingsMenu();
     setTimeout(() => openUsernameOverlay(null), 100);
 });
-
 
 function renderLeaderboard() {
     const isStreak = document.getElementById('lbToggle').checked;
@@ -2200,7 +2097,6 @@ function spawnTrailParticle() {
     p.style.zIndex = '1';
     gameSurface.appendChild(p);
 
-    
     switch (activeTrail) {
         case 'sparks': {
             const angle = Math.random() * Math.PI * 2;
@@ -2406,13 +2302,11 @@ function spawnTrailParticle() {
         default: return;
     }
 
-    
     p.addEventListener('animationend', () => {
         if (p.parentNode) p.remove();
         trailParticleCount--;
     }, { once: true });
 }
-
 
 let trailPreviewInterval = null;
 
@@ -2428,7 +2322,6 @@ function startTrailPreview(trailId) {
 
         const bx = 40, by = 40; 
 
-        
         switch (trailId) {
             case 'sparks': {
                 const angle = Math.random()*Math.PI*2, dist=15+Math.random()*15, size=3+Math.random()*3;
