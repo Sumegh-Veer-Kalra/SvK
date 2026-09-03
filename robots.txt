@@ -1,5 +1,4 @@
 User-agent: *
-Allow: /$
-Disallow: /games/
+Allow: /
 
 Sitemap: https://svk-games.netlify.app/sitemap.xml

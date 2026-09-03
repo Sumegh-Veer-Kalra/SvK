@@ -9,7 +9,9 @@
     <meta name="robots" content="index, follow, max-image-preview:large">
     <link rel="canonical" href="https://svk-games.netlify.app/">
 
-    <meta name="google-site-verification" content="UhFUGTXKMD5P4eiTX_9kBxo_Gb0t7HeqNrhm1227NNk" />
+    <meta name="author" content="Sumegh Veer Kalra, SvK Creations">
+    <meta name="creator" content="Sumegh Veer Kalra, SvK Creations">
+
     <meta name="msvalidate.01" content="404C82F851A61285B757FA235D594E7E" />
 
     <meta property="og:type" content="website">
@@ -32,6 +34,26 @@
       "url": "https://svk-games.netlify.app/",
       "description": "Play premium free HTML5 online browser games on SvK.",
       "genre": "GamePlatform",
+      "author": [
+        {
+          "@type": "Person",
+          "name": "Sumegh Veer Kalra"
+        },
+        {
+          "@type": "Organization",
+          "name": "SvK Creations"
+        }
+      ],
+      "creator": [
+        {
+          "@type": "Person",
+          "name": "Sumegh Veer Kalra"
+        },
+        {
+          "@type": "Organization",
+          "name": "SvK Creations"
+        }
+      ],
       "potentialAction": {
         "@type": "SearchAction",
         "target": "https://svk-games.netlify.app/?search={search_term_string}",
@@ -40,7 +62,15 @@
     }
     </script>
 
-    <link rel="stylesheet" href="style.css?v=1.1.3">
+    <script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(regs) {
+            for (let reg of regs) reg.unregister();
+        });
+    }
+    </script>
+
+    <link rel="stylesheet" href="style.css?v=1.1.8">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -110,16 +140,26 @@
             <div class="modal-header">
                 <h3 id="modal-game-title">Game Title</h3>
                 <div class="modal-controls">
+                    <button id="shareBtn" onclick="portal.shareActiveGame()" title="Share Game">🔗</button>
                     <button id="fullscreenBtn" title="Fullscreen">⛶</button>
                     <button id="closeBtn" onclick="portal.closeGame()" title="Close">✕</button>
                 </div>
             </div>
             <div class="iframe-wrapper" id="game-iframe-wrapper">
-                
+                <div id="game-loader-overlay" class="game-loader-overlay" style="display: none;">
+                    <div class="loader-pulse-logo">S<span class="logo-v">v</span>K</div>
+                    <div class="loader-game-title" id="loader-game-title">LOADING...</div>
+                    <div class="loader-bar-track">
+                        <div class="loader-bar-fill" id="loader-progress-bar"></div>
+                    </div>
+                    <div class="loader-stats">
+                        <span id="loader-percent">0%</span>
+                        <span id="loader-bytes">0 KB / 0 KB</span>
+                    </div>
+                </div>
                 <button id="mobile-back-btn" class="mobile-back-btn" onclick="portal.exitMobileFullscreen()" style="display: none;">
                     ✕ Back
                 </button>
-                
             </div>
 
             <div class="mobile-info-panel" id="game-mobile-panel">
@@ -132,6 +172,8 @@
         </div>
     </div>
 
-    <script src="portal.js?v=1.1.4"></script>
+    <div id="toast-notification" class="toast-notification">Link copied to clipboard! 📋</div>
+
+    <script src="portal.js?v=1.1.8"></script>
 </body>
 </html>

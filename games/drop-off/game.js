@@ -10,6 +10,7 @@ const gameStorage = {
 const ball = document.getElementById('ball');
 const gameArea = document.querySelector('.game-area');
 const gameSurface = document.getElementById('gameSurface') || gameArea; 
+let GAME_HEIGHT = 0;
 const countdownOverlay = document.getElementById('countdownOverlay');
 
 const pauseMenuOverlay = document.getElementById('pauseMenuOverlay');
@@ -283,7 +284,43 @@ obstacleStyle.textContent = `
 `;
 document.head.appendChild(obstacleStyle);
 
-window.addEventListener('resize', () => {AREA_WIDTH = gameArea.clientWidth; if (x > AREA_WIDTH - BALL_SIZE) x = AREA_WIDTH - BALL_SIZE; });
+function updateGameDimensions() {
+    AREA_WIDTH = gameArea.clientWidth;
+    GAME_HEIGHT = self.innerHeight;
+    document.documentElement.style.setProperty('--app-height', GAME_HEIGHT + 'px');
+    if (x > AREA_WIDTH - BALL_SIZE) x = AREA_WIDTH - BALL_SIZE;
+}
+
+updateGameDimensions();
+
+(function initViewportListeners() {
+    let lastW = AREA_WIDTH;
+    let lastH = GAME_HEIGHT;
+
+    function onResize() {
+        const newW = gameArea.clientWidth;
+        const newH = self.innerHeight;
+        const widthChanged = newW !== lastW;
+        const bigHeightChange = Math.abs(newH - lastH) > 100;
+
+        if (widthChanged || bigHeightChange) {
+            lastW = newW;
+            lastH = newH;
+            updateGameDimensions();
+        } else {
+            AREA_WIDTH = newW;
+            if (x > AREA_WIDTH - BALL_SIZE) x = AREA_WIDTH - BALL_SIZE;
+        }
+    }
+
+    window.addEventListener('resize', onResize);
+    window.addEventListener('orientationchange', () => {
+        setTimeout(updateGameDimensions, 350);
+    });
+    if (self.visualViewport) {
+        self.visualViewport.addEventListener('resize', onResize);
+    }
+})();
 
 let FALL_SPEED = 3;
 
@@ -479,7 +516,7 @@ function gameLoop() {
                 isPressingSlam = false;
                 countdownETA = 0;
                 countdownOverlay.style.display = 'none';
-                nextSpawnY = worldY + window.innerHeight + 300;
+                nextSpawnY = worldY + GAME_HEIGHT + 300;
             }
         }
 
@@ -514,7 +551,7 @@ function gameLoop() {
         if (x > AREA_WIDTH - BALL_SIZE) x = AREA_WIDTH - BALL_SIZE;
 
         const currentDip = 15 + (7 * slamProgress);
-        const dynamicBallY = window.innerHeight * (currentDip / 100);
+        const dynamicBallY = GAME_HEIGHT * (currentDip / 100);
 
         ball.style.transform = `translate3d(${Math.round(x)}px, ${Math.round(dynamicBallY)}px, 0)`;
 
@@ -544,7 +581,7 @@ function gameLoop() {
             height: 32
         };
 
-        const FIXED_ANCHOR = window.innerHeight * 0.15; 
+        const FIXED_ANCHOR = GAME_HEIGHT * 0.15; 
 
         obstacles.forEach(ob => {
             if (!ob.broken) {
@@ -586,7 +623,7 @@ function gameLoop() {
             }
         }
 
-        if (gameState !== "transition" && worldY + window.innerHeight > nextSpawnY - 500) {
+        if (gameState !== "transition" && worldY + GAME_HEIGHT > nextSpawnY - 500) {
             spawnObstacle();
         }
     }
@@ -841,7 +878,7 @@ function spawnObstacle() {
 }
 
 function renderObstacles() {
-    const ballOffset = window.innerHeight * 0.15;
+    const ballOffset = GAME_HEIGHT * 0.15;
 
     for (let i = obstacles.length - 1; i >= 0; i--) {
         let ob = obstacles[i];
@@ -883,9 +920,9 @@ function gameOver(hitObstacle) {
 
     if (!hitObstacle) {
         const currentDip = 15 + (7 * slamProgress);
-        const ballTopScreen = window.innerHeight * (currentDip / 100);
+        const ballTopScreen = GAME_HEIGHT * (currentDip / 100);
         hitObstacle = obstacles.find(ob => {
-            let obScreenY = (ob.y - worldY) + (window.innerHeight * 0.15);
+            let obScreenY = (ob.y - worldY) + (GAME_HEIGHT * 0.15);
             return ballTopScreen < obScreenY + 22 && ballTopScreen + 24 > obScreenY;
         });
     }
@@ -922,9 +959,9 @@ function gameOver(hitObstacle) {
     banner.style.left = bannerX + 'px';
     banner.style.top = bannerY + 'px';
 
-    const expectedDeckHeight = window.innerHeight < 680 ? 240 : 450;
-    const deckTop = window.innerHeight - expectedDeckHeight;
-    const bannerHeight = window.innerHeight < 680 ? 36 : 48;
+    const expectedDeckHeight = GAME_HEIGHT < 680 ? 240 : 450;
+    const deckTop = GAME_HEIGHT - expectedDeckHeight;
+    const bannerHeight = GAME_HEIGHT < 680 ? 36 : 48;
     const bannerBottom = bannerY + bannerHeight; 
     if (bannerBottom > deckTop) {
         banner.style.top = (deckTop - bannerHeight) + 'px';
@@ -1074,7 +1111,7 @@ function resetGameEngine(goToMenu) {
     isPressingSlam = false;
     menuAiStep = 0;
 
-    ball.style.transform = `translate3d(${Math.round(x)}px, ${Math.round(window.innerHeight * 0.15)}px, 0)`;
+    ball.style.transform = `translate3d(${Math.round(x)}px, ${Math.round(GAME_HEIGHT * 0.15)}px, 0)`;
     ball.classList.remove('slamming');
 
     if (goToMenu) {
@@ -1161,13 +1198,13 @@ function triggerGameStart(e) {
             menu.style.display = 'none';
         }, 600);
 
-        const ballScreenY = window.innerHeight * 0.15;
+        const ballScreenY = GAME_HEIGHT * 0.15;
 
         for (let i = obstacles.length - 1; i >= 0; i--) {
             let ob = obstacles[i];
             let obScreenY = (ob.y - worldY) + ballScreenY;
 
-            if (obScreenY > window.innerHeight) {
+            if (obScreenY > GAME_HEIGHT) {
                 ob.element.remove();
                 obstacles.splice(i, 1);
             }
@@ -2089,7 +2126,7 @@ function spawnTrailParticle() {
     trailParticleCount++;           
 
     const bx = x + BALL_SIZE / 2;
-    const by = window.innerHeight * ((15 + 7 * slamProgress) / 100) + BALL_SIZE / 2;
+    const by = GAME_HEIGHT * ((15 + 7 * slamProgress) / 100) + BALL_SIZE / 2;
     const fallTrail = Math.min(FALL_SPEED * 4, 40);
 
     const p = document.createElement('div');
@@ -2401,4 +2438,7 @@ function stopTrailPreview() {
 }
 
 applyActiveSkinStyle();
-gameLoop();
+requestAnimationFrame(() => {
+    updateGameDimensions();
+    gameLoop();
+});

@@ -725,8 +725,8 @@ function gameOver(failReason) {
         fallAnimationInterval = setInterval(() => {
             frame = (frame === 2) ? 3 : 2;
             playerImg.src = `image${frame}.png`;
-        }, 100); 
-    }, 1200);
+        }, 90); 
+    }, 500);
 
     gameBtn.className = "ready";
     const btnSurface = gameBtn.querySelector(".button-surface");
@@ -804,3 +804,18 @@ function gameOver(failReason) {
     stageWrapper.classList.add("shake-screen");
     setTimeout(() => stageWrapper.classList.remove("shake-screen"), 300);
 }
+
+function fitGameToScreen() {
+    const stage = document.getElementById("stage-wrapper");
+    if (!stage) return;
+    const padding = 16;
+    const availWidth = window.innerWidth - padding;
+    const availHeight = window.innerHeight - padding;
+    const scale = Math.min(availWidth / 500, availHeight / 500, 1.2);
+    document.documentElement.style.setProperty("--scale-factor", Math.max(0.1, scale));
+}
+
+window.addEventListener("resize", fitGameToScreen);
+window.addEventListener("orientationchange", fitGameToScreen);
+window.addEventListener("DOMContentLoaded", fitGameToScreen);
+fitGameToScreen();

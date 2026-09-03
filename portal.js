@@ -10,6 +10,8 @@ class PortalController {
         this.fullscreenBtn = document.getElementById("fullscreenBtn");
         this.currentIframe = null;
         this.searchQuery = "";
+        this.activeGameId = null;
+        this.toastTimeout = null;
 
         this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
                         window.matchMedia("(pointer: coarse)").matches ||
@@ -263,6 +265,11 @@ class PortalController {
         const game = this.games.find(g => g.id === gameId);
         if (!game) return;
 
+        this.activeGameId = gameId;
+
+        const ratio = game.aspectRatio ? game.aspectRatio.replace('/', ' / ') : (game.orientation === 'portrait' ? '9 / 16' : '16 / 9');
+        this.wrapper.style.setProperty('--game-aspect-ratio', ratio);
+
         window.history.replaceState(null, "", `/games/${gameId}/`);
 
         console.log(`[Portal] Launching game: ${game.title} (${game.orientation})`);
@@ -277,6 +284,7 @@ class PortalController {
         if (modalContent) {
             modalContent.className = "modal-content"; 
             modalContent.classList.add(game.orientation);
+            modalContent.style.setProperty('--game-aspect-ratio', ratio);
         }
 
         this.modalTitle.innerText = game.title.toUpperCase();
@@ -301,6 +309,17 @@ class PortalController {
             const cacheBuster = Date.now();
             const absolutePath = game.path.startsWith("/") ? game.path : "/" + game.path;
             this.wrapper.innerHTML = `
+                <div id="game-loader-overlay" class="game-loader-overlay">
+                    <div class="loader-pulse-logo">S<span class="logo-v">v</span>K</div>
+                    <div class="loader-game-title">${game.title.toUpperCase()}</div>
+                    <div class="loader-bar-track">
+                        <div class="loader-bar-fill" id="loader-progress-bar"></div>
+                    </div>
+                    <div class="loader-stats">
+                        <span id="loader-percent">0%</span>
+                        <span id="loader-bytes">Connecting...</span>
+                    </div>
+                </div>
                 <iframe src="${absolutePath}?v=${cacheBuster}" 
                         id="active-game-iframe"
                         allow="autoplay; keyboard; fullscreen; clipboard-write"
@@ -310,6 +329,7 @@ class PortalController {
             this.currentIframe = document.getElementById("active-game-iframe");
 
             this.addToRecentlyPlayed(gameId);
+            this.loadGameWithAssets(game);
         }
 
         const pcSidebar = document.getElementById("game-pc-sidebar");
@@ -394,6 +414,7 @@ class PortalController {
                         <h3 class="sidebar-title" style="border:none; padding:0; margin:0; font-size:16px;">${game.title}</h3>
                         <span style="color:var(--color-neon-pink); font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1px;">${game.category}</span>
                     </div>
+                    <button class="mobile-share-btn" onclick="portal.shareActiveGame()" title="Share Game">🔗 SHARE</button>
                 </div>
                 
                 ${similarHtml}
@@ -440,11 +461,27 @@ class PortalController {
 
         console.log(`[Portal] Starting mobile game in fullscreen: ${game.title}`);
 
+        const ratio = game.aspectRatio ? game.aspectRatio.replace('/', ' / ') : (game.orientation === 'portrait' ? '9 / 16' : '16 / 9');
+        this.wrapper.style.setProperty('--game-aspect-ratio', ratio);
+        this.modal.classList.add("mobile-playing");
+        this.wrapper.classList.add("mobile-playing");
+
         this.wrapper.classList.remove("showing-cover");
 
         const cacheBuster = Date.now();
         const absolutePath = game.path.startsWith("/") ? game.path : "/" + game.path;
         this.wrapper.innerHTML = `
+            <div id="game-loader-overlay" class="game-loader-overlay">
+                <div class="loader-pulse-logo">S<span class="logo-v">v</span>K</div>
+                <div class="loader-game-title">${game.title.toUpperCase()}</div>
+                <div class="loader-bar-track">
+                    <div class="loader-bar-fill" id="loader-progress-bar"></div>
+                </div>
+                <div class="loader-stats">
+                    <span id="loader-percent">0%</span>
+                    <span id="loader-bytes">Connecting...</span>
+                </div>
+            </div>
             <button id="mobile-back-btn" class="mobile-back-btn" onclick="portal.exitMobileFullscreen()" style="display: none;">
                 ✕ Back
             </button>
@@ -457,6 +494,7 @@ class PortalController {
         this.currentIframe = document.getElementById("active-game-iframe");
 
         this.addToRecentlyPlayed(gameId);
+        this.loadGameWithAssets(game);
 
         if (this.wrapper.requestFullscreen) {
             this.wrapper.requestFullscreen().catch(err => console.error(err));
@@ -476,6 +514,141 @@ class PortalController {
         }, 150);
     }
 
+    async loadGameWithAssets(game) {
+        const loaderOverlay = document.getElementById("game-loader-overlay");
+        const loaderBar = document.getElementById("loader-progress-bar");
+        const loaderPercent = document.getElementById("loader-percent");
+        const loaderBytes = document.getElementById("loader-bytes");
+        const loaderTitle = document.getElementById("loader-game-title");
+
+        if (loaderTitle) loaderTitle.innerText = game.title.toUpperCase();
+        if (loaderBar) loaderBar.style.width = "0%";
+        if (loaderPercent) loaderPercent.innerText = "0%";
+        if (loaderBytes) loaderBytes.innerText = "Scanning assets...";
+        if (loaderOverlay) {
+            loaderOverlay.classList.remove("fade-out");
+            loaderOverlay.style.display = "flex";
+        }
+
+        const gameDir = game.path.substring(0, game.path.lastIndexOf("/") + 1);
+        const gameHtmlUrl = this.getAbsPath(game.path);
+
+        const assetUrls = new Set([gameHtmlUrl]);
+        if (game.thumbnail) assetUrls.add(this.getAbsPath(game.thumbnail));
+        if (game.cover_square) assetUrls.add(this.getAbsPath(game.cover_square));
+        if (game.cover_landscape) assetUrls.add(this.getAbsPath(game.cover_landscape));
+
+        try {
+            const response = await fetch(gameHtmlUrl);
+            const htmlText = await response.text();
+
+            const assetRegex = /(?:src|href|url)\s*[:=\(]\s*['"]?([^'"\)\s>]+\.(?:png|jpe?g|gif|svg|webp|mp3|wav|ogg|ttf|woff2?|css|js))['"\)]?/gi;
+            let match;
+            while ((match = assetRegex.exec(htmlText)) !== null) {
+                let assetPath = match[1].trim();
+                if (!assetPath.startsWith("http://") && !assetPath.startsWith("https://") && !assetPath.startsWith("//")) {
+                    if (assetPath.startsWith("/")) {
+                        assetUrls.add(assetPath);
+                    } else {
+                        assetUrls.add(this.getAbsPath(gameDir + assetPath));
+                    }
+                }
+            }
+
+            const subFilesToScan = Array.from(assetUrls).filter(u => u.endsWith(".css") || u.endsWith(".js"));
+            await Promise.all(subFilesToScan.map(async (subUrl) => {
+                try {
+                    const subRes = await fetch(subUrl);
+                    const subText = await subRes.text();
+                    let subMatch;
+                    const subRegex = /['"]([^'"]+\.(?:png|jpe?g|gif|svg|webp|mp3|wav|ogg|ttf|woff2?))['"]/gi;
+                    while ((subMatch = subRegex.exec(subText)) !== null) {
+                        let p = subMatch[1].trim();
+                        if (!p.startsWith("http://") && !p.startsWith("https://") && !p.startsWith("//")) {
+                            if (p.startsWith("/")) {
+                                assetUrls.add(p);
+                            } else {
+                                assetUrls.add(this.getAbsPath(gameDir + p));
+                            }
+                        }
+                    }
+                } catch (e) {}
+            }));
+
+            const uniqueUrls = Array.from(assetUrls);
+            let totalBytes = 0;
+            let loadedBytes = 0;
+            const assetSizes = new Map();
+
+            await Promise.all(uniqueUrls.map(async (url) => {
+                try {
+                    const head = await fetch(url, { method: "HEAD" });
+                    const len = head.headers.get("Content-Length");
+                    const size = len ? parseInt(len, 10) : 40000;
+                    assetSizes.set(url, size);
+                    totalBytes += size;
+                } catch (e) {
+                    assetSizes.set(url, 40000);
+                    totalBytes += 40000;
+                }
+            }));
+
+            const formatMB = (bytes) => {
+                if (bytes < 1024 * 1024) {
+                    return `${(bytes / 1024).toFixed(1)} KB`;
+                }
+                return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+            };
+
+            const updateUI = () => {
+                const pct = totalBytes > 0 ? Math.min(100, Math.floor((loadedBytes / totalBytes) * 100)) : 100;
+                if (loaderBar) loaderBar.style.width = `${pct}%`;
+                if (loaderPercent) loaderPercent.innerText = `${pct}%`;
+                if (loaderBytes) loaderBytes.innerText = `${formatMB(loadedBytes)} / ${formatMB(totalBytes)}`;
+            };
+
+            await Promise.all(uniqueUrls.map(async (url) => {
+                try {
+                    const res = await fetch(url);
+                    if (!res.body) {
+                        loadedBytes += assetSizes.get(url) || 0;
+                        updateUI();
+                        return;
+                    }
+                    const reader = res.body.getReader();
+                    while (true) {
+                        const { done, value } = await reader.read();
+                        if (done) break;
+                        loadedBytes += value.length;
+                        updateUI();
+                    }
+                } catch (e) {
+                    loadedBytes += assetSizes.get(url) || 0;
+                    updateUI();
+                }
+            }));
+
+            loadedBytes = totalBytes;
+            if (loaderBar) loaderBar.style.width = "100%";
+            if (loaderPercent) loaderPercent.innerText = "100%";
+            if (loaderBytes) loaderBytes.innerText = `${formatMB(totalBytes)} / ${formatMB(totalBytes)}`;
+
+        } catch (err) {
+            console.warn("[Portal Preloader] Fallback:", err);
+            if (loaderBar) loaderBar.style.width = "100%";
+            if (loaderPercent) loaderPercent.innerText = "100%";
+        }
+
+        setTimeout(() => {
+            if (loaderOverlay) {
+                loaderOverlay.classList.add("fade-out");
+                setTimeout(() => {
+                    loaderOverlay.style.display = "none";
+                }, 350);
+            }
+        }, 250);
+    }
+
     closeGame() {
         console.log("[Portal] Closing active game player.");
 
@@ -483,14 +656,66 @@ class PortalController {
 
         this.wrapper.innerHTML = "";
         this.currentIframe = null;
+        this.activeGameId = null;
 
         this.modal.classList.remove("active");
+        this.modal.classList.remove("mobile-playing");
+        this.wrapper.classList.remove("mobile-playing");
 
         if (document.fullscreenElement) {
             document.exitFullscreen().catch(err => console.log(err));
         }
 
         window.history.replaceState(null, "", "/");
+    }
+
+    shareActiveGame() {
+        const game = this.games.find(g => g.id === this.activeGameId);
+        const gameTitle = game ? game.title : "SvK Games";
+        const gameUrl = this.activeGameId 
+            ? `https://svk-games.netlify.app/games/${this.activeGameId}/`
+            : window.location.origin;
+
+        if (navigator.share) {
+            navigator.share({
+                title: `${gameTitle} - SvK`,
+                text: `Play ${gameTitle} instantly on SvK!`,
+                url: gameUrl
+            }).catch(() => {});
+        } else if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(gameUrl).then(() => {
+                this.showToast("Link copied to clipboard! 📋");
+            }).catch(() => {
+                this.copyFallback(gameUrl);
+            });
+        } else {
+            this.copyFallback(gameUrl);
+        }
+    }
+
+    copyFallback(text) {
+        try {
+            const input = document.createElement("input");
+            input.value = text;
+            document.body.appendChild(input);
+            input.select();
+            document.execCommand("copy");
+            document.body.removeChild(input);
+            this.showToast("Link copied to clipboard! 📋");
+        } catch (e) {
+            this.showToast("Could not copy link");
+        }
+    }
+
+    showToast(msg) {
+        const toast = document.getElementById("toast-notification");
+        if (!toast) return;
+        toast.innerText = msg;
+        toast.classList.add("show");
+        clearTimeout(this.toastTimeout);
+        this.toastTimeout = setTimeout(() => {
+            toast.classList.remove("show");
+        }, 2200);
     }
 
     setupFullscreen() {
@@ -515,6 +740,8 @@ class PortalController {
 
     exitMobileFullscreen() {
         console.log("[Portal] Exit fullscreen button tapped.");
+        this.modal.classList.remove("mobile-playing");
+        this.wrapper.classList.remove("mobile-playing");
         if (document.exitFullscreen) {
             document.exitFullscreen().catch(err => console.log(err));
         } else if (document.webkitExitFullscreen) {
@@ -534,6 +761,8 @@ class PortalController {
 
         if (!isFullscreen && this.isMobile) {
             console.log("[Portal] Exited fullscreen on mobile. Stopping game and restoring play cover.");
+            this.modal.classList.remove("mobile-playing");
+            this.wrapper.classList.remove("mobile-playing");
 
             const activeIframe = document.getElementById("active-game-iframe");
             if (activeIframe) {
