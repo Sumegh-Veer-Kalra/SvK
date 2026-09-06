@@ -52,6 +52,7 @@ body {
     cursor: pointer;
     display: flex;
     align-items: baseline;
+    text-decoration: none;
 }
 
 .logo-v {

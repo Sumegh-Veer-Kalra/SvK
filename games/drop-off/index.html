@@ -2,10 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Drop-Off - SvK</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Drop-Off - Play Free Online on SvK</title>
+    <link rel="canonical" href="https://svk-games.netlify.app/games/drop-off/">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="alternate icon" href="/favicon.ico">
     
-    <meta name="description" content="Play Drop-Off, the ultimate free online HTML5 endless runner game on SvK. No downloads, no installs, instant play directly in your browser.">
-    <meta name="keywords" content="drop-off, endless runner, play drop-off online, free arcade games, svk, html5 games">
+    <meta name="description" content="Play Drop-Off, the ultimate free online HTML5 endless runner game on SvK. Jump, slide, and survive the heights with instant browser play.">
+    <meta name="keywords" content="drop-off, endless runner, play drop-off online, free arcade games, svk, svk games, html5 games">
     <meta name="author" content="Sumegh Veer Kalra, SvK Creations">
     <meta name="creator" content="Sumegh Veer Kalra, SvK Creations">
     <meta name="robots" content="index, follow">
@@ -17,12 +21,175 @@
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
 
-    <script>
-        
-        window.location.replace("/?game=drop-off");
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "VideoGame",
+      "name": "Drop-Off",
+      "url": "https://svk-games.netlify.app/games/drop-off/",
+      "image": "https://svk-games.netlify.app/games/drop-off/cover_landscape.png",
+      "description": "Play Drop-Off, the ultimate free online HTML5 endless runner game on SvK. Jump, slide, and survive the heights with instant browser play.",
+      "genre": ["Arcade", "Endless Runner"],
+      "playMode": "SinglePlayer",
+      "operatingSystem": "Any",
+      "applicationCategory": "Game",
+      "author": {
+        "@type": "Person",
+        "name": "Sumegh Veer Kalra"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SvK Creations"
+      }
+    }
     </script>
+
+    <script>
+    if (!/bot|crawl|spider|google|slurp|bing/i.test(navigator.userAgent)) {
+        window.location.replace("/?game=drop-off");
+    }
+    </script>
+
+    <style>
+        :root {
+            --bg-main: #060611;
+            --bg-card: rgba(15, 15, 34, 0.85);
+            --color-accent: #00ffcc;
+            --color-neon-pink: #ff3366;
+            --text-primary: #ffffff;
+            --text-secondary: #9aa0c7;
+            --font-heading: 'Bungee', cursive;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background-image: 
+                radial-gradient(circle at 50% 10%, rgba(0, 255, 204, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 51, 102, 0.06) 0%, transparent 40%);
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid rgba(0, 255, 204, 0.2);
+            border-radius: 20px;
+            max-width: 520px;
+            width: 100%;
+            padding: 28px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 16px;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 28px;
+            color: var(--color-accent);
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+
+        .cover-img {
+            width: 100%;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .game-title {
+            font-family: var(--font-heading);
+            font-size: 24px;
+            color: #ffffff;
+            letter-spacing: 1px;
+        }
+
+        .game-meta {
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            color: var(--color-neon-pink);
+            text-transform: uppercase;
+        }
+
+        .game-desc {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .controls-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 10px 16px;
+            width: 100%;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .controls-box strong {
+            color: var(--color-accent);
+        }
+
+        .play-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            background: linear-gradient(135deg, var(--color-accent), #00c3ff);
+            color: #050515;
+            font-family: var(--font-heading);
+            font-size: 18px;
+            text-decoration: none;
+            padding: 14px 28px;
+            border-radius: 28px;
+            letter-spacing: 1px;
+            font-weight: 800;
+            box-shadow: 0 5px 20px rgba(0, 255, 204, 0.4);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .play-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 255, 204, 0.7);
+        }
+    </style>
 </head>
 <body>
-    <p>Redirecting to SvK... <a href="/?game=drop-off">Click here if not redirected</a></p>
+
+    <div class="card">
+        <a href="/" class="logo">S<span style="font-size:22px;">v</span>K</a>
+        <img src="/games/drop-off/cover_landscape.png" alt="Drop-Off Cover" class="cover-img">
+        <div class="game-meta">Arcade • Endless Runner</div>
+        <h1 class="game-title">DROP-OFF</h1>
+        <p class="game-desc">
+            Jump, slide, and survive the heights in Drop-Off! Dodge brick obstacles, smash through cracked bricks, earn coins, and survive the infinite descent.
+        </p>
+        <div class="controls-box">
+            <strong>Controls:</strong> Space / Up Arrow / Tap to Jump • Down Arrow to Slide
+        </div>
+        <a href="/?game=drop-off" class="play-btn">PLAY DROP-OFF NOW</a>
+    </div>
+
 </body>
 </html>

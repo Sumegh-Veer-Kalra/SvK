@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>About | SvK Games</title>
+    <meta name="description" content="SvK is an independent web gaming platform showcase created by Sumegh Veer Kalra (SvK Creations). Lightweight browser games with zero installs.">
+    <meta name="author" content="Sumegh Veer Kalra, SvK Creations">
+    <meta name="creator" content="Sumegh Veer Kalra, SvK Creations">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://svk-games.netlify.app/about">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="alternate icon" href="/favicon.ico">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "AboutPage",
+      "name": "About SvK",
+      "url": "https://svk-games.netlify.app/about",
+      "description": "SvK is an independent web gaming platform showcase created by Sumegh Veer Kalra (SvK Creations).",
+      "mainEntity": {
+        "@type": "Organization",
+        "name": "SvK Creations",
+        "founder": {
+          "@type": "Person",
+          "name": "Sumegh Veer Kalra"
+        }
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --bg-main: #060611;
+            --bg-card: rgba(15, 15, 34, 0.75);
+            --color-accent: #00ffcc;
+            --color-neon-pink: #ff3366;
+            --text-primary: #ffffff;
+            --text-secondary: #9aa0c7;
+            --border-glow: rgba(0, 255, 204, 0.15);
+            --font-heading: 'Bungee', cursive;
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            background-image: 
+                radial-gradient(circle at 50% 10%, rgba(0, 255, 204, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(255, 51, 102, 0.06) 0%, transparent 40%);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 780px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        .header-section {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 42px;
+            color: var(--color-accent);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: baseline;
+            text-shadow: 0 0 20px rgba(0, 255, 204, 0.5);
+            transition: transform 0.2s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo .logo-v {
+            font-size: 32px;
+            margin: 0 1px;
+        }
+
+        .page-badge {
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: var(--color-neon-pink);
+            text-transform: uppercase;
+            background: rgba(255, 51, 102, 0.1);
+            border: 1px solid rgba(255, 51, 102, 0.3);
+            padding: 4px 14px;
+            border-radius: 20px;
+        }
+
+        .section-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glow);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--color-accent), transparent 60%);
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: 20px;
+            color: var(--color-accent);
+            margin-bottom: 16px;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-desc {
+            color: var(--text-secondary);
+            font-size: 15px;
+            margin-bottom: 20px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
+        }
+
+        .feature-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .feature-box:hover {
+            transform: translateY(-2px);
+            border-color: rgba(0, 255, 204, 0.4);
+        }
+
+        .feature-title {
+            font-weight: 700;
+            font-size: 14px;
+            color: #ffffff;
+        }
+
+        .feature-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .info-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .info-item {
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 3px solid var(--color-accent);
+            border-radius: 0 12px 12px 0;
+            padding: 14px 18px;
+        }
+
+        .info-label {
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--color-neon-pink);
+            margin-bottom: 4px;
+        }
+
+        .info-val {
+            font-size: 15px;
+            color: #ffffff;
+        }
+
+        .games-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .game-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .game-item:hover {
+            border-color: var(--color-accent);
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.1);
+        }
+
+        .game-item-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .game-item-title {
+            font-family: var(--font-heading);
+            font-size: 16px;
+            color: #ffffff;
+            letter-spacing: 1px;
+        }
+
+        .game-item-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .game-item-btn {
+            background: rgba(0, 255, 204, 0.1);
+            border: 1px solid var(--color-accent);
+            color: var(--color-accent);
+            font-family: var(--font-heading);
+            font-size: 12px;
+            padding: 8px 18px;
+            border-radius: 20px;
+            text-decoration: none;
+            white-space: nowrap;
+            letter-spacing: 1px;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .game-item-btn:hover {
+            background: var(--color-accent);
+            color: #050515;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.6);
+            transform: scale(1.05);
+        }
+
+        .upcoming-note {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--color-neon-pink);
+            text-align: center;
+            margin-top: 10px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .cta-section {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+            padding: 40px 20px;
+            background: rgba(15, 15, 34, 0.5);
+            border-radius: 20px;
+            border: 1px dashed rgba(255, 255, 255, 0.15);
+        }
+
+        .cta-question {
+            font-family: var(--font-heading);
+            font-size: 18px;
+            color: var(--text-primary);
+            letter-spacing: 1px;
+        }
+
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--color-accent), #00c3ff);
+            color: #050515;
+            font-family: var(--font-heading);
+            font-size: 16px;
+            text-decoration: none;
+            padding: 16px 36px;
+            border-radius: 30px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            box-shadow: 0 8px 25px rgba(0, 255, 204, 0.4);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 12px 35px rgba(0, 255, 204, 0.7);
+        }
+
+        .footer-copyright {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .section-card {
+                padding: 20px;
+            }
+            .game-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .game-item-btn {
+                width: 100%;
+                text-align: center;
+            }
+            .logo {
+                font-size: 34px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-section">
+            <a href="/" class="logo">S<span class="logo-v">v</span>K</a>
+        </div>
+
+        <section class="section-card">
+            <h2 class="section-title">1. WHAT IS SvK?</h2>
+            <p class="section-desc">
+                SvK is an independent web gaming platform originally made as a showcase for the collection of games made by Sumegh Veer Kalra (Independent/Solo Studio: SvK Creations).
+            </p>
+            <div class="feature-grid">
+                <div class="feature-box">
+                    <span class="feature-title">⚡ Zero Installs</span>
+                    <span class="feature-desc">No downloads, no storage clutter, no waiting.</span>
+                </div>
+                <div class="feature-box">
+                    <span class="feature-title">🚀 Smooth Performance</span>
+                    <span class="feature-desc">Lightweight games for all devices from a potato to high-end PC.</span>
+                </div>
+                <div class="feature-box">
+                    <span class="feature-title">📱 Play Anywhere</span>
+                    <span class="feature-desc">Works on ANY Operating System and on ANY Device. Just Name it. Play it.</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-card">
+            <h2 class="section-title">2. CREATOR & STUDIO</h2>
+            <div class="info-list">
+                <div class="info-item">
+                    <div class="info-label">Founder / Creator</div>
+                    <div class="info-val"><strong>Sumegh Veer Kalra</strong></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Independent / Solo Studio</div>
+                    <div class="info-val"><strong>SvK Creations</strong></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Vision</div>
+                    <div class="info-val">Originally for a showcase of games made by SvK Creations, but developing slowly and steady to become a bigger gaming platform.</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-card">
+            <h2 class="section-title">3. THE GAMES</h2>
+            <p class="section-desc">The current games available on SvK Games are:</p>
+            <div class="games-list">
+                <div class="game-item">
+                    <div class="game-item-info">
+                        <span class="game-item-title">Drop-Off</span>
+                        <span class="game-item-desc">An endless free-fall reflex runner. Dodge brick obstacles, smash through cracked bricks, earn coins, and survive the drop.</span>
+                    </div>
+                    <a href="/?game=drop-off" class="game-item-btn">PLAY</a>
+                </div>
+                <div class="game-item">
+                    <div class="game-item-info">
+                        <span class="game-item-title">The Button</span>
+                        <span class="game-item-desc">A secret mission to destroy target's manufacturing unit, press the button as it commands with the correct order and destroy the target!</span>
+                    </div>
+                    <a href="/?game=the-button" class="game-item-btn">PLAY</a>
+                </div>
+            </div>
+            <p class="upcoming-note">✨ New games are on the way! ✨</p>
+        </section>
+
+        <div class="cta-section">
+            <div class="cta-question">Bored reading stuff?</div>
+            <a href="https://svk-games.netlify.app/" class="cta-btn">PLAY GAMES NOW</a>
+            <div class="footer-copyright">
+                © 2026 SvK Creations • Created by <strong>Sumegh Veer Kalra</strong>. All rights reserved.
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

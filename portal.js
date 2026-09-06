@@ -66,10 +66,7 @@ class PortalController {
         if (targetGame) {
             const gameExists = this.games.some(g => g.id === targetGame);
             if (gameExists) {
-                
                 this.playGame(targetGame);
-
-                window.history.replaceState(null, "", `/games/${targetGame}/`);
             }
         } else {
             const path = window.location.pathname;
@@ -270,7 +267,9 @@ class PortalController {
         const ratio = game.aspectRatio ? game.aspectRatio.replace('/', ' / ') : (game.orientation === 'portrait' ? '9 / 16' : '16 / 9');
         this.wrapper.style.setProperty('--game-aspect-ratio', ratio);
 
-        window.history.replaceState(null, "", `/games/${gameId}/`);
+        if (!window.location.search.includes("game=")) {
+            window.history.replaceState(null, "", `/games/${gameId}/`);
+        }
 
         console.log(`[Portal] Launching game: ${game.title} (${game.orientation})`);
 
