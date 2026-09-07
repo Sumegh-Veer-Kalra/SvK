@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Maze - Play Test on SvK</title>
+    <link rel="canonical" href="https://svk-games.netlify.app/games/maze/">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="alternate icon" href="/favicon.ico">
+    
+    <meta name="description" content="Play Maze - Exclusive Play Test on SvK. Explore retro 3D voxel labyrinth, escape traps, and reach the exit.">
+    <meta name="robots" content="noindex, nofollow">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+    if (!/bot|crawl|spider|google|slurp|bing/i.test(navigator.userAgent)) {
+        if (localStorage.getItem("svk_playtester") === "true") {
+            window.location.replace("/?game=maze");
+        } else {
+            window.location.replace("/");
+        }
+    }
+    </script>
+
+    <style>
+        :root {
+            --bg-main: #060611;
+            --bg-card: rgba(15, 15, 34, 0.85);
+            --color-accent: #4ade80;
+            --color-neon-pink: #ff3366;
+            --text-primary: #ffffff;
+            --text-secondary: #9aa0c7;
+            --font-heading: 'Bungee', cursive;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(74, 222, 128, 0.08), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(255, 51, 102, 0.08), transparent 25%);
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            max-width: 520px;
+            width: 100%;
+            padding: 32px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(12px);
+        }
+
+        .logo {
+            display: inline-block;
+            font-family: var(--font-heading);
+            font-size: 26px;
+            font-weight: 800;
+            color: #fff;
+            text-decoration: none;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .cover-img {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .game-meta {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--color-accent);
+            margin-bottom: 8px;
+        }
+
+        .game-title {
+            font-family: var(--font-heading);
+            font-size: 28px;
+            margin-bottom: 14px;
+            color: #fff;
+            letter-spacing: 1px;
+        }
+
+        .game-desc {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .controls-box {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-align: left;
+        }
+
+        .controls-box strong {
+            color: var(--color-accent);
+        }
+
+        .play-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #ffffff;
+            font-family: var(--font-heading);
+            font-size: 18px;
+            text-decoration: none;
+            padding: 14px 28px;
+            border-radius: 28px;
+            letter-spacing: 1px;
+            font-weight: 800;
+            box-shadow: 0 5px 20px rgba(16, 185, 129, 0.4);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .play-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.7);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <a href="/" class="logo">S<span style="font-size:22px;">v</span>K</a>
+        <img src="/games/maze/cover_landscape.png" alt="Maze Cover" class="cover-img" onerror="this.style.display='none'">
+        <div class="game-meta">Play Test • 3D • Maze</div>
+        <h1 class="game-title">MAZE</h1>
+        <p class="game-desc">
+            Explore a 3D retro voxel labyrinth. Reach checkpoints, overcome hazards, climb ladders, and find your way out!
+        </p>
+        <div class="controls-box">
+            <strong>Controls:</strong> WASD / Arrow Keys to move, Mouse to look around, Space to jump. Touch joystick &amp; button on mobile.
+        </div>
+        <a href="/?game=maze" class="play-btn">PLAY TEST MAZE</a>
+    </div>
+
+</body>
+</html>

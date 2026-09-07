@@ -12,6 +12,7 @@ class PortalController {
         this.searchQuery = "";
         this.activeGameId = null;
         this.toastTimeout = null;
+        this.isTester = localStorage.getItem("svk_playtester") === "true";
 
         this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
                         window.matchMedia("(pointer: coarse)").matches ||
@@ -33,6 +34,29 @@ class PortalController {
     }
 
     async init() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const playtestCode = urlParams.get('playtest');
+        if (playtestCode) {
+            if (playtestCode === "exit" || playtestCode === "reset") {
+                localStorage.removeItem("svk_playtester");
+                this.isTester = false;
+                window.location.replace("/");
+                return;
+            }
+            try {
+                const encoder = new TextEncoder();
+                const data = encoder.encode(playtestCode);
+                const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+                const hash = Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, "0")).join("");
+                if (hash === "bcb4e1c074a510e326b84c97d4e749fcc75c757e12d5efb26f501be75ed569fc") {
+                    localStorage.setItem("svk_playtester", "true");
+                    this.isTester = true;
+                    window.location.replace("/");
+                    return;
+                }
+            } catch (err) {}
+        }
+
         try {
             console.log("[Portal] Fetching games database...");
             const response = await fetch('games.json');
@@ -42,6 +66,8 @@ class PortalController {
 
             this.renderGrid();
 
+            this.renderPlaytest();
+
             this.renderRecentlyPlayed();
 
             this.setupCategoryFilters();
@@ -50,8 +76,16 @@ class PortalController {
 
             this.setupSearch();
 
-            document.addEventListener("fullscreenchange", () => this.handleFullscreenChange());
-            document.addEventListener("webkitfullscreenchange", () => this.handleFullscreenChange());
+            document.addEventListener("fullscreenchange", () => {
+                this.handleFullscreenChange();
+                this.updateIframeScaling();
+            });
+            document.addEventListener("webkitfullscreenchange", () => {
+                this.handleFullscreenChange();
+                this.updateIframeScaling();
+            });
+            window.addEventListener("resize", () => this.updateIframeScaling());
+            window.addEventListener("orientationchange", () => this.updateIframeScaling());
 
             this.checkRoute();
         } catch (e) {
@@ -64,8 +98,12 @@ class PortalController {
         const targetGame = urlParams.get('game');
         
         if (targetGame) {
-            const gameExists = this.games.some(g => g.id === targetGame);
-            if (gameExists) {
+            const game = this.games.find(g => g.id === targetGame);
+            if (game) {
+                if (game.playtest && !this.isTester) {
+                    window.history.replaceState(null, "", "/");
+                    return;
+                }
                 this.playGame(targetGame);
             }
         } else {
@@ -73,8 +111,12 @@ class PortalController {
             const match = path.match(/^\/games\/([^\/]+)\/?$/);
             if (match) {
                 const gameId = match[1];
-                const gameExists = this.games.some(g => g.id === gameId);
-                if (gameExists) {
+                const game = this.games.find(g => g.id === gameId);
+                if (game) {
+                    if (game.playtest && !this.isTester) {
+                        window.history.replaceState(null, "", "/");
+                        return;
+                    }
                     this.playGame(gameId);
                 }
             }
@@ -82,7 +124,7 @@ class PortalController {
     }
 
     renderFeatured() {
-        const featuredGame = this.games.find(g => g.featured) || this.games[0];
+        const featuredGame = this.games.find(g => g.featured && !g.playtest) || this.games.find(g => !g.playtest) || this.games[0];
         if (!featuredGame) return;
 
         console.log(`[Portal] Setting featured game: ${featuredGame.title}`);
@@ -155,8 +197,20 @@ class PortalController {
             }
         }
 
+        const playtestSection = document.getElementById("playtest-section");
+        if (playtestSection) {
+            if (this.searchQuery.length > 0) {
+                playtestSection.style.display = "none";
+            } else {
+                this.renderPlaytest();
+            }
+        }
+
         const filteredGames = this.games.filter(game => {
-            
+            if (game.playtest) {
+                return false;
+            }
+
             if (this.activeFilter !== "all" && game.category !== this.activeFilter) {
                 return false;
             }
@@ -261,6 +315,7 @@ class PortalController {
     playGame(gameId) {
         const game = this.games.find(g => g.id === gameId);
         if (!game) return;
+        if (game.playtest && !this.isTester) return;
 
         this.activeGameId = gameId;
 
@@ -321,11 +376,12 @@ class PortalController {
                 </div>
                 <iframe src="${absolutePath}?v=${cacheBuster}" 
                         id="active-game-iframe"
-                        allow="autoplay; keyboard; fullscreen; clipboard-write"
+                        allow="autoplay; keyboard; fullscreen; clipboard-write; pointer-lock"
                         scrolling="no">
                 </iframe>
             `;
             this.currentIframe = document.getElementById("active-game-iframe");
+            this.updateIframeScaling();
 
             this.addToRecentlyPlayed(gameId);
             this.loadGameWithAssets(game);
@@ -486,11 +542,12 @@ class PortalController {
             </button>
             <iframe src="${absolutePath}?v=${cacheBuster}" 
                     id="active-game-iframe"
-                    allow="autoplay; keyboard; fullscreen; clipboard-write"
+                    allow="autoplay; keyboard; fullscreen; clipboard-write; pointer-lock"
                     scrolling="no">
             </iframe>
         `;
         this.currentIframe = document.getElementById("active-game-iframe");
+        this.updateIframeScaling();
 
         this.addToRecentlyPlayed(gameId);
         this.loadGameWithAssets(game);
@@ -511,6 +568,40 @@ class PortalController {
                 } catch (e) {}
             }
         }, 150);
+    }
+
+    updateIframeScaling() {
+        if (!this.currentIframe || !this.activeGameId) return;
+        const game = this.games.find(g => g.id === this.activeGameId);
+        if (!game) return;
+
+        const isLandscape = game.orientation === "landscape" || game.aspectRatio === "16/9";
+        const isNarrow = window.innerWidth < 640 && (window.innerHeight > window.innerWidth || this.modal.classList.contains("mobile-playing"));
+
+        if (isLandscape && isNarrow) {
+            const screenW = window.innerWidth;
+            const screenH = window.innerHeight;
+            const baseW = 750;
+            const baseH = 422;
+            const scale = Math.min(screenW / baseW, screenH / baseH);
+
+            this.currentIframe.style.setProperty("width", baseW + "px", "important");
+            this.currentIframe.style.setProperty("height", baseH + "px", "important");
+            this.currentIframe.style.setProperty("max-width", "none", "important");
+            this.currentIframe.style.setProperty("max-height", "none", "important");
+            this.currentIframe.style.setProperty("transform", `scale(${scale})`, "important");
+            this.currentIframe.style.setProperty("transform-origin", "center center", "important");
+            this.currentIframe.style.setProperty("flex-shrink", "0", "important");
+            return;
+        }
+
+        this.currentIframe.style.removeProperty("width");
+        this.currentIframe.style.removeProperty("height");
+        this.currentIframe.style.removeProperty("max-width");
+        this.currentIframe.style.removeProperty("max-height");
+        this.currentIframe.style.removeProperty("transform");
+        this.currentIframe.style.removeProperty("transform-origin");
+        this.currentIframe.style.removeProperty("flex-shrink");
     }
 
     async loadGameWithAssets(game) {
@@ -851,6 +942,50 @@ class PortalController {
         this.renderRecentlyPlayed();
     }
 
+    renderPlaytest() {
+        const section = document.getElementById("playtest-section");
+        const grid = document.getElementById("playtest-grid-container");
+        if (!section || !grid) return;
+
+        if (!this.isTester) {
+            section.style.display = "none";
+            return;
+        }
+
+        const testGames = this.games.filter(g => g.playtest);
+        if (testGames.length === 0) {
+            section.style.display = "none";
+            return;
+        }
+
+        section.style.display = "block";
+        grid.innerHTML = "";
+
+        testGames.forEach(game => {
+            const card = document.createElement("div");
+            card.className = "game-card";
+            card.setAttribute("data-id", game.id);
+            card.onclick = () => this.playGame(game.id);
+
+            const displayCategory = (game.category || "PLAY TEST").toUpperCase();
+
+            card.innerHTML = `
+                <div class="game-thumb-wrapper">
+                    <img src="${this.getAbsPath(game.thumbnail)}" alt="${game.title}" class="game-thumb" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22><rect width=%22100%22 height=%22100%22 fill=%22%2311112a%22/><text x=%2250%%22 y=%2250%%22 font-family=%22sans-serif%22 font-size=%2216%22 fill=%22%23ffffff%22 text-anchor=%22middle%22 dy=%22.3em%22>${game.title}</text></svg>'">
+                </div>
+                <div class="game-info">
+                    <h3 class="game-title">${game.title}</h3>
+                    <div class="game-meta" style="display: flex; justify-content: flex-start; align-items: center; font-size: 11px; color: var(--text-secondary);">
+                        <span style="color: var(--color-neon-pink); font-weight: 800; letter-spacing: 0.5px;">${displayCategory}</span>
+                        <span style="opacity: 0.4; margin: 0 6px;">•</span>
+                        <span>${(game.orientation || "PORTRAIT").toUpperCase()}</span>
+                    </div>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
     renderRecentlyPlayed() {
         const section = document.getElementById("recently-played-section");
         const grid = document.getElementById("recently-played-grid-container");
@@ -873,7 +1008,8 @@ class PortalController {
 
         const playedGames = list
             .map(id => this.games.find(g => g.id === id))
-            .filter(Boolean);
+            .filter(Boolean)
+            .filter(g => !g.playtest || this.isTester);
 
         if (playedGames.length === 0) {
             section.style.display = "none";

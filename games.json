@@ -48,5 +48,30 @@
       "action",
       "survival"
     ]
+  },
+  {
+    "id": "maze",
+    "title": "Maze",
+    "category": "mind",
+    "orientation": "landscape",
+    "aspectRatio": "16/9",
+    "thumbnail": "games/maze/cover_square.png",
+    "cover_square": "games/maze/cover_square.png",
+    "cover_landscape": "games/maze/cover_landscape.png",
+    "path": "games/maze/game.html",
+    "description": "Navigate a retro 3D voxel labyrinth! Find checkpoints, climb ladders, avoid deadly hazards, and conquer the maze.",
+    "controls": "WASD / Arrow Keys: Move | Mouse: Look around (Click to lock cursor, Esc to unlock) | Space: Jump. On Touch: Virtual joystick & jump button.",
+    "featured": false,
+    "playtest": true,
+    "tags": [
+      "maze",
+      "3d",
+      "voxel",
+      "fps",
+      "puzzle",
+      "retro",
+      "arcade",
+      "survival"
+    ]
   }
 ]

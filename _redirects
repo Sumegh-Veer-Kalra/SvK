@@ -1,4 +1,7 @@
-/drop-off    /games/drop-off/    301!
-/the-button  /games/the-button/  301!
-/about.html  /about/             301!
-/*           /404.html           404
+/drop-off           /games/drop-off/    301!
+/the-button         /games/the-button/  301!
+/games/drop-off     /games/drop-off/    301!
+/games/the-button   /games/the-button/  301!
+/about.html         /about/             301!
+/*                  /404.html           404
+
