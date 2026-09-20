@@ -1164,7 +1164,9 @@ body {
     position: static !important;
 }
 
-.mobile-device .game-modal.mobile-playing .mobile-info-panel {
+.mobile-device .game-modal.mobile-playing .mobile-info-panel,
+.mobile-device .game-modal.mobile-playing .modal-header,
+.mobile-device .game-modal.mobile-playing .floating-close-btn {
     display: none !important;
 }
 
@@ -1224,4 +1226,243 @@ body {
     background: rgba(255, 51, 102, 0.9);
     border-color: var(--color-neon-pink);
     box-shadow: 0 0 20px rgba(255, 51, 102, 0.6);
+}
+
+.rotate-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 50% 40%, #0d0d26 0%, #04040e 100%);
+    z-index: 100000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.rotate-close-btn {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    z-index: 10;
+    transition: var(--transition-smooth);
+}
+
+.rotate-close-btn:active {
+    background: rgba(255, 51, 102, 0.8);
+    border-color: var(--color-neon-pink);
+}
+
+.rotate-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 320px;
+    width: 100%;
+}
+
+.rotate-title {
+    font-family: var(--font-heading);
+    font-size: 19px;
+    font-weight: 900;
+    line-height: 1.35;
+    color: #ffffff;
+    letter-spacing: 1px;
+    text-shadow: 0 0 16px rgba(0, 255, 204, 0.4);
+    margin: 0 0 28px 0;
+    text-transform: uppercase;
+}
+
+.rotate-anim-container {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+
+.rotate-phone-anim {
+    width: 44px;
+    height: 76px;
+    border: 3px solid var(--color-accent);
+    border-radius: 10px;
+    background: rgba(0, 255, 204, 0.06);
+    box-shadow: 0 0 22px rgba(0, 255, 204, 0.45), inset 0 0 12px rgba(0, 255, 204, 0.2);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4px;
+    box-sizing: border-box;
+    animation: rotatePhoneDevice 2.4s cubic-bezier(0.45, 0.05, 0.25, 1) infinite;
+}
+
+.rotate-phone-screen {
+    flex: 1;
+    width: 100%;
+    border-radius: 6px;
+    background: rgba(0, 255, 204, 0.08);
+    border: 1px solid rgba(0, 255, 204, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rotate-game-preview {
+    font-family: var(--font-heading);
+    font-size: 9px;
+    font-weight: 900;
+    color: var(--color-accent);
+    letter-spacing: 0.5px;
+    display: inline-flex;
+    align-items: baseline;
+    justify-content: center;
+    line-height: 1;
+    text-shadow: 0 0 6px rgba(0, 255, 204, 0.6);
+    transform-origin: center center;
+    animation: counterRotateText 2.4s cubic-bezier(0.45, 0.05, 0.25, 1) infinite;
+}
+
+.rotate-game-preview .logo-v {
+    font-family: var(--font-heading);
+    font-size: 6.5px;
+    margin: 0 0.5px;
+}
+
+.rotate-arrows {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 150px;
+    height: 150px;
+    pointer-events: none;
+    transform-origin: 75px 75px;
+}
+
+.rotate-arrow-svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 0 6px rgba(255, 51, 102, 0.7));
+    transform-origin: 75px 75px;
+    animation: rotateArrowToFro 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes rotatePhoneDevice {
+    0%, 15% {
+        transform: rotate(0deg);
+    }
+    45%, 70% {
+        transform: rotate(-90deg);
+    }
+    90%, 100% {
+        transform: rotate(0deg);
+    }
+}
+
+@keyframes counterRotateText {
+    0%, 15% {
+        transform: rotate(0deg) scale(1);
+    }
+    45%, 70% {
+        transform: rotate(90deg) scale(1.35);
+    }
+    90%, 100% {
+        transform: rotate(0deg) scale(1);
+    }
+}
+
+@keyframes rotateArrowToFro {
+    0% {
+        transform: rotate(6deg);
+        opacity: 0.4;
+    }
+    100% {
+        transform: rotate(-32deg);
+        opacity: 1;
+    }
+}
+
+.rotate-anim-container.shake {
+    animation: rotateShake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes rotateShake {
+    10%, 90% { transform: translate3d(-3px, 0, 0); }
+    20%, 80% { transform: translate3d(5px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+    40%, 60% { transform: translate3d(6px, 0, 0); }
+}
+
+.rotate-notice-tip {
+    font-family: var(--font-primary);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--color-neon-pink);
+    background: rgba(255, 51, 102, 0.15);
+    border: 1px solid rgba(255, 51, 102, 0.4);
+    padding: 6px 14px;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    letter-spacing: 0.5px;
+}
+
+.rotate-btn-primary {
+    width: 100%;
+    background: linear-gradient(135deg, var(--color-accent), #00c3ff);
+    color: #050515;
+    font-family: var(--font-heading);
+    font-size: 15px;
+    font-weight: 900;
+    padding: 14px 20px;
+    border-radius: 28px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 0 25px rgba(0, 255, 204, 0.5);
+    letter-spacing: 1px;
+    margin-bottom: 14px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.rotate-btn-primary:active {
+    transform: scale(0.96);
+}
+
+.rotate-btn-secondary {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-family: var(--font-primary);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 8px 16px;
+    text-decoration: underline;
+    opacity: 0.85;
+    transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.rotate-btn-secondary:hover,
+.rotate-btn-secondary:active {
+    opacity: 1;
+    color: #ffffff;
 }

@@ -84,8 +84,14 @@ class PortalController {
                 this.handleFullscreenChange();
                 this.updateIframeScaling();
             });
-            window.addEventListener("resize", () => this.updateIframeScaling());
-            window.addEventListener("orientationchange", () => this.updateIframeScaling());
+            window.addEventListener("resize", () => {
+                this.updateIframeScaling();
+                this.checkAutoRotateLaunch();
+            });
+            window.addEventListener("orientationchange", () => {
+                this.updateIframeScaling();
+                this.checkAutoRotateLaunch();
+            });
 
             this.checkRoute();
         } catch (e) {
@@ -197,10 +203,10 @@ class PortalController {
             }
         }
 
-        const playtestSection = document.getElementById("playtest-section");
-        if (playtestSection) {
+        if (this.isTester) {
+            const playtestSection = document.getElementById("playtest-section");
             if (this.searchQuery.length > 0) {
-                playtestSection.style.display = "none";
+                if (playtestSection) playtestSection.style.display = "none";
             } else {
                 this.renderPlaytest();
             }
@@ -523,6 +529,124 @@ class PortalController {
 
         this.wrapper.classList.remove("showing-cover");
 
+        const isLandscape = game.orientation === "landscape" || game.aspectRatio === "16/9";
+        const isPortrait = window.innerHeight > window.innerWidth;
+
+        if (isLandscape && isPortrait) {
+            this.showRotatePrompt(gameId);
+            return;
+        }
+
+        this.launchMobileGameActual(gameId);
+    }
+
+    showRotatePrompt(gameId) {
+        this.dismissRotateOverlay();
+
+        const overlay = document.createElement("div");
+        overlay.id = "rotate-device-overlay";
+        overlay.className = "rotate-overlay";
+        overlay.dataset.gameId = gameId;
+
+        overlay.innerHTML = `
+            <button class="rotate-close-btn" onclick="portal.exitMobileFullscreen()" aria-label="Close">✕</button>
+            <div class="rotate-content">
+                <h2 class="rotate-title">ROTATE YOUR DEVICE TO BE A GODLIKE PLAYER</h2>
+                <div class="rotate-anim-container">
+                    <div class="rotate-phone-anim">
+                        <div class="rotate-phone-screen">
+                            <div class="rotate-game-preview">S<span class="logo-v">v</span>K</div>
+                        </div>
+                    </div>
+                    <div class="rotate-arrows">
+                        <svg viewBox="0 0 150 150" class="rotate-arrow-svg">
+                            <path d="M 75 14 A 61 61 0 0 0 14 75" fill="none" stroke="var(--color-neon-pink)" stroke-width="4" stroke-linecap="round" stroke-dasharray="8 6"/>
+                            <polygon points="14,83 7,69 21,69" fill="var(--color-neon-pink)"/>
+                        </svg>
+                    </div>
+                </div>
+                <div id="rotate-notice-tip" class="rotate-notice-tip" style="display: none;"></div>
+                <button class="rotate-btn-primary" onclick="portal.handleRotateDone('${gameId}')">YEP, I'M DONE.</button>
+                <button class="rotate-btn-secondary" onclick="portal.continueInPortrait('${gameId}')">Continue anyway</button>
+            </div>
+        `;
+
+        this.wrapper.innerHTML = "";
+        this.wrapper.appendChild(overlay);
+    }
+
+    async handleRotateDone(gameId) {
+        if (this.wrapper.requestFullscreen) {
+            try {
+                await this.wrapper.requestFullscreen();
+            } catch (e) {}
+        } else if (this.wrapper.webkitRequestFullscreen) {
+            try {
+                this.wrapper.webkitRequestFullscreen();
+            } catch (e) {}
+        }
+
+        if (screen.orientation && screen.orientation.lock) {
+            try {
+                await screen.orientation.lock("landscape");
+            } catch (e) {}
+        }
+
+        setTimeout(() => {
+            const isLandscape = window.innerWidth > window.innerHeight;
+            if (isLandscape) {
+                this.dismissRotateOverlay();
+                this.launchMobileGameActual(gameId);
+            } else {
+                const container = document.querySelector(".rotate-anim-container");
+                if (container) {
+                    container.classList.remove("shake");
+                    void container.offsetWidth;
+                    container.classList.add("shake");
+                    setTimeout(() => {
+                        if (container) container.classList.remove("shake");
+                    }, 500);
+                }
+                const tip = document.getElementById("rotate-notice-tip");
+                if (tip) {
+                    tip.textContent = "Please turn your phone sideways!";
+                    tip.style.display = "block";
+                }
+            }
+        }, 250);
+    }
+
+    continueInPortrait(gameId) {
+        this.dismissRotateOverlay();
+        this.launchMobileGameActual(gameId);
+    }
+
+    dismissRotateOverlay() {
+        const overlay = document.getElementById("rotate-device-overlay");
+        if (overlay) overlay.remove();
+    }
+
+    checkAutoRotateLaunch() {
+        const overlay = document.getElementById("rotate-device-overlay");
+        if (overlay && overlay.dataset.gameId) {
+            const isLandscape = window.innerWidth > window.innerHeight;
+            if (isLandscape) {
+                const gameId = overlay.dataset.gameId;
+                this.dismissRotateOverlay();
+                this.launchMobileGameActual(gameId);
+            }
+        }
+    }
+
+    exitMobileFullscreen() {
+        this.dismissRotateOverlay();
+        this.closeGame();
+    }
+
+    launchMobileGameActual(gameId) {
+        const game = this.games.find(g => g.id === gameId);
+        if (!game) return;
+
         const cacheBuster = Date.now();
         const absolutePath = game.path.startsWith("/") ? game.path : "/" + game.path;
         this.wrapper.innerHTML = `
@@ -537,7 +661,7 @@ class PortalController {
                     <span id="loader-bytes">Connecting...</span>
                 </div>
             </div>
-            <button id="mobile-back-btn" class="mobile-back-btn" onclick="portal.exitMobileFullscreen()" style="display: none;">
+            <button id="mobile-back-btn" class="mobile-back-btn" onclick="portal.exitMobileFullscreen()">
                 ✕ Back
             </button>
             <iframe src="${absolutePath}?v=${cacheBuster}" 
@@ -943,19 +1067,78 @@ class PortalController {
     }
 
     renderPlaytest() {
-        const section = document.getElementById("playtest-section");
-        const grid = document.getElementById("playtest-grid-container");
-        if (!section || !grid) return;
-
         if (!this.isTester) {
-            section.style.display = "none";
+            const existingSection = document.getElementById("playtest-section");
+            if (existingSection) existingSection.remove();
+            const existingStyle = document.getElementById("playtest-dynamic-styles");
+            if (existingStyle) existingStyle.remove();
             return;
         }
 
         const testGames = this.games.filter(g => g.playtest);
         if (testGames.length === 0) {
-            section.style.display = "none";
+            const existingSection = document.getElementById("playtest-section");
+            if (existingSection) existingSection.remove();
             return;
+        }
+
+        if (!document.getElementById("playtest-dynamic-styles")) {
+            const style = document.createElement("style");
+            style.id = "playtest-dynamic-styles";
+            style.textContent = `
+                #playtest-section {
+                    margin-bottom: 30px;
+                }
+                #playtest-section .section-title {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                }
+                .playtest-badge {
+                    font-size: 10px;
+                    font-weight: 800;
+                    letter-spacing: 1px;
+                    text-transform: uppercase;
+                    background: rgba(255, 51, 102, 0.15);
+                    color: var(--color-neon-pink);
+                    border: 1px solid rgba(255, 51, 102, 0.35);
+                    padding: 2px 8px;
+                    border-radius: 12px;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        let section = document.getElementById("playtest-section");
+        let grid = document.getElementById("playtest-grid-container");
+
+        if (!section) {
+            section = document.createElement("section");
+            section.className = "games-section";
+            section.id = "playtest-section";
+
+            const title = document.createElement("h2");
+            title.className = "section-title";
+            title.innerHTML = 'Play Test <span class="playtest-badge">Confidential</span>';
+            section.appendChild(title);
+
+            grid = document.createElement("div");
+            grid.className = "games-grid";
+            grid.id = "playtest-grid-container";
+            section.appendChild(grid);
+
+            const recentlyPlayed = document.getElementById("recently-played-section");
+            if (recentlyPlayed && recentlyPlayed.parentNode) {
+                recentlyPlayed.parentNode.insertBefore(section, recentlyPlayed);
+            } else {
+                const popularTitle = document.getElementById("games-section-title");
+                if (popularTitle && popularTitle.closest(".games-section")) {
+                    popularTitle.closest(".games-section").before(section);
+                } else {
+                    const main = document.querySelector("main") || document.body;
+                    main.appendChild(section);
+                }
+            }
         }
 
         section.style.display = "block";

@@ -16,6 +16,11 @@ html,body{overflow:hidden;background:#000;font-family:'Press Start 2P',monospace
   display:block;pointer-events:none;
   box-shadow:0 0 20px rgba(0,0,0,0.6), inset 0 0 15px rgba(74,222,128,0.08);
   backdrop-filter:blur(4px);
+  transition:border-color .15s, box-shadow .15s;
+}
+#joystick-base.active{
+  border-color:rgba(74,222,128,0.85);
+  box-shadow:0 0 25px rgba(74,222,128,0.4), inset 0 0 15px rgba(74,222,128,0.2);
 }
 #joystick-base::before{
   content:'';position:absolute;inset:18px;border-radius:50%;
@@ -26,17 +31,33 @@ html,body{overflow:hidden;background:#000;font-family:'Press Start 2P',monospace
   background:rgba(74,222,128,0.6);border:3px solid #4ade80;
   top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;
   box-shadow:0 0 12px rgba(74,222,128,0.6);
+  transition:box-shadow .15s, background .15s;
+}
+#joystick-knob.sprint{
+  background:rgba(74,222,128,0.95);
+  box-shadow:0 0 20px #4ade80, inset 0 0 10px #ffffff;
+  border-color:#ffffff;
 }
 #touch-jump-btn{
   position:absolute;right:26px;bottom:30px;width:66px;height:66px;border-radius:50%;
   background:rgba(18,18,24,0.75);border:3px solid #4ade80;color:#4ade80;
-  font-family:'Press Start 2P',monospace;font-size:18px;
   display:flex;align-items:center;justify-content:center;
   pointer-events:auto;user-select:none;-webkit-user-select:none;
   box-shadow:0 0 20px rgba(74,222,128,0.25);cursor:pointer;
   transition:background 0.1s, transform 0.1s;
 }
 #touch-jump-btn:active, #touch-jump-btn.active{
+  background:rgba(74,222,128,0.35);transform:scale(0.92);
+}
+#touch-pause-btn{
+  position:absolute;top:14px;right:14px;width:46px;height:46px;border-radius:10px;
+  background:rgba(18,18,24,0.75);border:2px solid #4ade80;color:#4ade80;
+  display:flex;align-items:center;justify-content:center;
+  pointer-events:auto;user-select:none;-webkit-user-select:none;
+  box-shadow:0 0 16px rgba(74,222,128,0.25);cursor:pointer;
+  transition:background 0.1s, transform 0.1s;
+}
+#touch-pause-btn:active{
   background:rgba(74,222,128,0.35);transform:scale(0.92);
 }
 canvas{display:block}
@@ -123,26 +144,123 @@ canvas{display:block}
   align-items:center;justify-content:center;
   background:radial-gradient(ellipse at center,#0a0a1a 0%,#000 100%);
   font-family:'Press Start 2P',monospace;">
-  <div id="project-title" style="color:#4ade80;font-size:32px;text-shadow:0 0 30px #4ade80,4px 4px 0 #166534;margin-bottom:44px;letter-spacing:4px;">MAZE</div>
-  <div style="display:flex;gap:32px;flex-wrap:wrap;justify-content:center;">
-    <button id="btn-easy" style="
-      background:#052e16;border:3px solid #4ade80;color:#4ade80;
-      font-family:'Press Start 2P',monospace;font-size:14px;
-      padding:22px 44px;border-radius:8px;cursor:pointer;
-      box-shadow:0 0 24px rgba(74,222,128,0.3),inset 0 0 12px rgba(74,222,128,0.07);
-      transition:all .15s;">
-      🟢 EASY
+  <div style="position:relative;display:flex;flex-direction:column;align-items:center;max-width:94vw;">
+    <button id="btn-settings" title="Settings" style="
+      position:absolute;top:-75px;right:18px;
+      background:#0f172a;border:2px solid #38bdf8;color:#38bdf8;
+      font-family:'Press Start 2P',monospace;font-size:16px;
+      width:44px;height:44px;border-radius:8px;cursor:pointer;
+      box-shadow:0 0 16px rgba(56,189,248,0.25);
+      display:flex;align-items:center;justify-content:center;
+      transition:all .15s;z-index:10;">
+      ⚙
     </button>
-    <button id="btn-hard" style="
-      background:#2d0000;border:3px solid #ef4444;color:#ef4444;
-      font-family:'Press Start 2P',monospace;font-size:14px;
-      padding:22px 44px;border-radius:8px;cursor:pointer;
-      box-shadow:0 0 24px rgba(239,68,68,0.3),inset 0 0 12px rgba(239,68,68,0.07);
-      transition:all .15s;">
-      🔴 HARD
+    <div id="project-title" style="color:#4ade80;font-size:32px;text-shadow:0 0 30px #4ade80,4px 4px 0 #166534;margin-bottom:40px;letter-spacing:4px;">MAZE</div>
+    <div style="display:flex;gap:32px;flex-wrap:wrap;justify-content:center;">
+      <button id="btn-easy" style="
+        background:#052e16;border:3px solid #4ade80;color:#4ade80;
+        font-family:'Press Start 2P',monospace;font-size:14px;
+        padding:22px 44px;border-radius:8px;cursor:pointer;
+        box-shadow:0 0 24px rgba(74,222,128,0.3),inset 0 0 12px rgba(74,222,128,0.07);
+        transition:all .15s;">
+        ⚡ EASY
+      </button>
+      <button id="btn-hard" style="
+        background:#2d0000;border:3px solid #ef4444;color:#ef4444;
+        font-family:'Press Start 2P',monospace;font-size:14px;
+        padding:22px 44px;border-radius:8px;cursor:pointer;
+        box-shadow:0 0 24px rgba(239,68,68,0.3),inset 0 0 12px rgba(239,68,68,0.07);
+        transition:all .15s;">
+        💀 HARD
+      </button>
+    </div>
+    <div id="resume-container" style="margin-top:28px;display:none;"></div>
+  </div>
+</div>
+<div id="settings-modal" style="
+  display:none;position:fixed;inset:0;z-index:1000;
+  align-items:center;justify-content:center;
+  background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);
+  font-family:'Press Start 2P',monospace;">
+  <div style="
+    width:420px;max-width:92vw;background:#0f172a;border:3px solid #38bdf8;
+    border-radius:12px;padding:24px;box-shadow:0 0 35px rgba(56,189,248,0.4);
+    display:flex;flex-direction:column;gap:18px;color:#f8fafc;">
+    <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #1e293b;padding-bottom:12px;">
+      <span style="font-size:14px;color:#38bdf8;letter-spacing:1px;">⚙️ SETTINGS</span>
+      <button id="btn-settings-x" style="background:none;border:none;color:#94a3b8;font-size:18px;cursor:pointer;line-height:1;font-family:monospace;font-weight:bold;">&times;</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div style="display:flex;justify-content:space-between;font-size:9px;color:#94a3b8;">
+        <span>CAMERA SENSITIVITY</span>
+        <span id="setting-sens-val" style="color:#4ade80;">1.0x</span>
+      </div>
+      <input type="range" id="setting-sens-slider" min="0.2" max="3.0" step="0.1" value="1.0" style="
+        width:100%;accent-color:#4ade80;cursor:pointer;height:24px;">
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;border-top:1px solid #1e293b;padding-top:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:9px;color:#94a3b8;">SOUND EFFECTS</span>
+        <button id="setting-sfx-toggle" style="
+          background:#052e16;border:2px solid #4ade80;color:#4ade80;
+          font-family:'Press Start 2P',monospace;font-size:9px;padding:8px 14px;
+          border-radius:6px;cursor:pointer;transition:all .15s;">
+          🔊 ON
+        </button>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:9px;color:#94a3b8;margin-top:4px;">
+        <span>SFX VOLUME</span>
+        <span id="setting-sfx-val" style="color:#4ade80;">80%</span>
+      </div>
+      <input type="range" id="setting-sfx-slider" min="0" max="100" step="5" value="80" style="
+        width:100%;accent-color:#4ade80;cursor:pointer;height:24px;">
+    </div>
+    <button id="btn-settings-close" style="
+      margin-top:10px;background:#1e293b;border:2px solid #38bdf8;color:#38bdf8;
+      font-family:'Press Start 2P',monospace;font-size:10px;padding:12px;
+      border-radius:6px;cursor:pointer;letter-spacing:1px;transition:all .15s;">
+      DONE
     </button>
   </div>
-  <div id="resume-container" style="margin-top:28px;display:none;"></div>
+</div>
+<div id="pause-menu" style="
+  display:none;position:fixed;inset:0;z-index:998;
+  align-items:center;justify-content:center;
+  background:rgba(0,0,0,0.8);backdrop-filter:blur(6px);
+  font-family:'Press Start 2P',monospace;">
+  <div id="pause-menu-card" style="
+    width:380px;max-width:90vw;background:linear-gradient(180deg,#111827,#0a0f1d);
+    border:3px solid #4ade80;border-radius:12px;padding:30px 24px;
+    box-shadow:0 0 35px rgba(74,222,128,0.35);
+    display:flex;flex-direction:column;align-items:center;gap:16px;">
+    <div style="color:#4ade80;font-size:18px;letter-spacing:2px;text-shadow:0 0 15px rgba(74,222,128,0.6);margin-bottom:8px;">
+      PAUSED
+    </div>
+    <button id="btn-pause-resume" style="
+      width:100%;background:#052e16;border:2px solid #4ade80;color:#4ade80;
+      font-family:'Press Start 2P',monospace;font-size:12px;padding:14px;
+      border-radius:6px;cursor:pointer;transition:all .15s;box-shadow:0 0 12px rgba(74,222,128,0.2);">
+      ▶ RESUME
+    </button>
+    <button id="btn-pause-settings" style="
+      width:100%;background:#0f172a;border:2px solid #38bdf8;color:#38bdf8;
+      font-family:'Press Start 2P',monospace;font-size:11px;padding:13px;
+      border-radius:6px;cursor:pointer;transition:all .15s;box-shadow:0 0 12px rgba(56,189,248,0.2);">
+      ⚙ SETTINGS
+    </button>
+    <button id="btn-pause-restart" style="
+      width:100%;background:#1e1b4b;border:2px solid #818cf8;color:#c7d2fe;
+      font-family:'Press Start 2P',monospace;font-size:10px;padding:12px;
+      border-radius:6px;cursor:pointer;transition:all .15s;">
+      ↺ RESTART RUN
+    </button>
+    <button id="btn-pause-quit" style="
+      width:100%;background:#1f2937;border:2px solid #64748b;color:#cbd5e1;
+      font-family:'Press Start 2P',monospace;font-size:10px;padding:12px;
+      border-radius:6px;cursor:pointer;transition:all .15s;">
+      ⌂ MAIN MENU
+    </button>
+  </div>
 </div>
 <div id="fps-badge">FPS: --</div>
 <div id="checkpoint-banner">
@@ -157,7 +275,8 @@ canvas{display:block}
 
 <div id="touch-controls">
   <div id="joystick-base"><div id="joystick-knob"></div></div>
-  <div id="touch-jump-btn">▲</div>
+  <div id="touch-jump-btn"><svg width="34" height="34" viewBox="0 0 24 24" fill="currentColor" style="display:block;pointer-events:none;"><polygon points="12,4 2,20 22,20"/></svg></div>
+  <div id="touch-pause-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="display:block;pointer-events:none;"><rect x="5" y="4" width="4.5" height="16" rx="1.5"/><rect x="14.5" y="4" width="4.5" height="16" rx="1.5"/></svg></div>
 </div>
 <div id="live-hud-badge">
   <span id="hud-stage">📍 STAGE 1</span>
@@ -188,6 +307,18 @@ var _projectSlug = NAME_OF_PROJECT.toLowerCase().replace(/[^a-z0-9]/g, '_');
 var SAVE_STORAGE_KEY = _projectSlug + '_save';
 var BEST_TIME_PREFIX = _projectSlug + '_best_time_';
 
+var cameraSensitivity = 1.0;
+var soundEffectsEnabled = true;
+var soundEffectsVolume = 0.8;
+try{
+  var _sSens = localStorage.getItem('maze_cam_sens');
+  if(_sSens !== null) cameraSensitivity = parseFloat(_sSens) || 1.0;
+  var _sSfx = localStorage.getItem('maze_sfx_enabled');
+  if(_sSfx !== null) soundEffectsEnabled = (_sSfx === '1');
+  var _sVol = localStorage.getItem('maze_sfx_vol');
+  if(_sVol !== null) soundEffectsVolume = parseFloat(_sVol) || 0.8;
+}catch(e){}
+
 (function boot(){
   if(typeof THREE==='undefined'){
     document.querySelector('.click-msg').textContent='Loading Three.js…';
@@ -204,7 +335,7 @@ console.warn=function(){
   origWarn.apply(console,arguments);
 };
 
-var isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || ('msMaxTouchPoints' in navigator);
+var isTouchDevice = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || /[?&](mobile|touch)/i.test(location.search);
 
 class PLC extends THREE.EventDispatcher{
   constructor(cam,dom){
@@ -216,8 +347,8 @@ class PLC extends THREE.EventDispatcher{
       if(!s.isLocked || isTouchDevice)return;
       var mx=ev.movementX||0;
       var my=ev.movementY||0;
-      s.yaw-=mx*0.0022;
-      s.pitch-=my*0.0022;
+      s.yaw-=mx*0.0022*cameraSensitivity;
+      s.pitch-=my*0.0022*cameraSensitivity;
       s.pitch=Math.max(-1.55,Math.min(1.55,s.pitch));
       s.cam.rotation.set(s.pitch,s.yaw,0,'YXZ');
     });
@@ -1075,13 +1206,18 @@ var hudEl=document.getElementById('hud');
 var debugEl=document.getElementById('debug');
 
 document.addEventListener('click',function(ev){
-  if(ev.target.closest('#gameover'))return;
-  
+  if(ev.target.closest('#gameover')||ev.target.closest('#settings-modal')||ev.target.closest('#btn-settings')||ev.target.closest('#pause-menu'))return;
+  var pm=document.getElementById('pause-menu');
+  if(pm&&pm.style.display==='flex')return;
+  var sm=document.getElementById('settings-modal');
+  if(sm&&sm.style.display!=='none')return;
   var ds=document.getElementById('difficulty-screen');
   if(ds&&ds.style.display!=='none')return;
   if(!controls.isLocked) controls.lock();
 });
 controls.addEventListener('lock',function(){
+  var pm = document.getElementById('pause-menu');
+  if(pm) pm.style.display = 'none';
   crosshair.style.display='block';
   hudEl.style.display='flex';
   if(isTouchDevice){
@@ -1094,69 +1230,99 @@ controls.addEventListener('unlock',function(){
     var tc = document.getElementById('touch-controls');
     if(tc) tc.style.display='none';
   }
+  if(isRunActive && !win && playerHP > 0 && !isGameOverlayOpen()){
+    var pm = document.getElementById('pause-menu');
+    if(pm) pm.style.display = 'flex';
+  }
 });
 
 if(isTouchDevice){
   var joyBase = document.getElementById('joystick-base');
   var joyKnob = document.getElementById('joystick-knob');
   var jumpBtn = document.getElementById('touch-jump-btn');
+  var pauseBtn = document.getElementById('touch-pause-btn');
 
   var moveTouchId = null;
   var lookTouchId = null;
   var lastLookX = 0, lastLookY = 0;
   var JOY_MAX_RADIUS = 46;
   var JOY_DEADZONE = 8;
+  var JOY_ACTIVATION_RADIUS = 76;
+  var LOOK_SENS_X = 0.0085;
+  var LOOK_SENS_Y = 0.0075;
 
   function getJoyCenter(){
     var rect = joyBase.getBoundingClientRect();
     return {x: rect.left + rect.width / 2, y: rect.top + rect.height / 2};
   }
 
+  function isJumpTouch(t){
+    if(!jumpBtn) return false;
+    var r = jumpBtn.getBoundingClientRect();
+    return (t.clientX >= r.left - 12 && t.clientX <= r.right + 12 &&
+            t.clientY >= r.top - 12 && t.clientY <= r.bottom + 12);
+  }
+
+  function isPauseTouch(t){
+    if(!pauseBtn) return false;
+    var r = pauseBtn.getBoundingClientRect();
+    return (t.clientX >= r.left - 12 && t.clientX <= r.right + 12 &&
+            t.clientY >= r.top - 12 && t.clientY <= r.bottom + 12);
+  }
+
   function resetJoy(){
     moveTouchId = null;
+    joyKnob.style.transition = 'transform 0.12s ease-out';
     joyKnob.style.transform = 'translate(-50%, -50%)';
+    joyKnob.classList.remove('sprint');
+    joyBase.classList.remove('active');
     mv.f = false; mv.b = false; mv.l = false; mv.r = false; mv.sprint = false;
+  }
+
+  function updateJoyPosition(t){
+    var center = getJoyCenter();
+    var dx = t.clientX - center.x;
+    var dy = t.clientY - center.y;
+    var dist = Math.hypot(dx, dy);
+    var clamped = Math.min(dist, JOY_MAX_RADIUS);
+    var ang = Math.atan2(dy, dx);
+    var kx = Math.cos(ang) * clamped;
+    var ky = Math.sin(ang) * clamped;
+
+    joyKnob.style.transition = 'none';
+    joyKnob.style.transform = 'translate(calc(-50% + ' + kx.toFixed(1) + 'px), calc(-50% + ' + ky.toFixed(1) + 'px))';
+
+    mv.f = (dy < -JOY_DEADZONE);
+    mv.b = (dy > JOY_DEADZONE);
+    mv.l = (dx < -JOY_DEADZONE);
+    mv.r = (dx > JOY_DEADZONE);
+
+    var isSprinting = (dist >= JOY_MAX_RADIUS * 0.85 && dy < -JOY_DEADZONE);
+    mv.sprint = isSprinting;
+    if(isSprinting) joyKnob.classList.add('sprint');
+    else joyKnob.classList.remove('sprint');
   }
 
   window.addEventListener('touchstart', function(ev){
     ensureAudio();
     if(!controls.isLocked) return;
+    if(ev.cancelable) ev.preventDefault();
 
     for(var i = 0; i < ev.changedTouches.length; i++){
       var t = ev.changedTouches[i];
 
-      var jbRect = jumpBtn.getBoundingClientRect();
-      if(t.clientX >= jbRect.left && t.clientX <= jbRect.right &&
-         t.clientY >= jbRect.top && t.clientY <= jbRect.bottom){
-        continue;
-      }
+      if(isJumpTouch(t) || isPauseTouch(t)) continue;
 
       var center = getJoyCenter();
       var distToJoy = Math.hypot(t.clientX - center.x, t.clientY - center.y);
-      var inJoyZone = (distToJoy <= 95) || 
-                      (t.clientX < window.innerWidth * 0.45 && t.clientY > window.innerHeight * 0.35);
 
-      if(inJoyZone){
+      if(distToJoy <= JOY_ACTIVATION_RADIUS){
         if(moveTouchId === null){
           moveTouchId = t.identifier;
-          var dx = t.clientX - center.x;
-          var dy = t.clientY - center.y;
-          var dist = Math.hypot(dx, dy);
-          var clamped = Math.min(dist, JOY_MAX_RADIUS);
-          var ang = Math.atan2(dy, dx);
-          var kx = Math.cos(ang) * clamped;
-          var ky = Math.sin(ang) * clamped;
-          joyKnob.style.transform = 'translate(calc(-50% + ' + kx + 'px), calc(-50% + ' + ky + 'px))';
-
-          mv.f = (dy < -JOY_DEADZONE);
-          mv.b = (dy > JOY_DEADZONE);
-          mv.l = (dx < -JOY_DEADZONE);
-          mv.r = (dx > JOY_DEADZONE);
-          mv.sprint = (dist >= JOY_MAX_RADIUS * 0.85 && dy < -JOY_DEADZONE);
+          joyBase.classList.add('active');
+          updateJoyPosition(t);
         }
-      } 
-      
-      else {
+      } else {
         if(lookTouchId === null){
           lookTouchId = t.identifier;
           lastLookX = t.clientX;
@@ -1164,30 +1330,17 @@ if(isTouchDevice){
         }
       }
     }
-  }, {passive: true});
+  }, {passive: false});
 
   window.addEventListener('touchmove', function(ev){
     if(!controls.isLocked) return;
+    if(ev.cancelable) ev.preventDefault();
 
     for(var i = 0; i < ev.changedTouches.length; i++){
       var t = ev.changedTouches[i];
 
       if(t.identifier === moveTouchId){
-        var center = getJoyCenter();
-        var dx = t.clientX - center.x;
-        var dy = t.clientY - center.y;
-        var dist = Math.hypot(dx, dy);
-        var clamped = Math.min(dist, JOY_MAX_RADIUS);
-        var ang = Math.atan2(dy, dx);
-        var kx = Math.cos(ang) * clamped;
-        var ky = Math.sin(ang) * clamped;
-        joyKnob.style.transform = 'translate(calc(-50% + ' + kx + 'px), calc(-50% + ' + ky + 'px))';
-
-        mv.f = (dy < -JOY_DEADZONE);
-        mv.b = (dy > JOY_DEADZONE);
-        mv.l = (dx < -JOY_DEADZONE);
-        mv.r = (dx > JOY_DEADZONE);
-        mv.sprint = (dist >= JOY_MAX_RADIUS * 0.85 && dy < -JOY_DEADZONE);
+        updateJoyPosition(t);
       }
 
       if(t.identifier === lookTouchId){
@@ -1196,39 +1349,56 @@ if(isTouchDevice){
         lastLookX = t.clientX;
         lastLookY = t.clientY;
 
-        controls.yaw -= dX * 0.0055;
-        controls.pitch -= dY * 0.0055;
-        controls.pitch = Math.max(-1.55, Math.min(1.55, controls.pitch));
+        controls.yaw -= dX * LOOK_SENS_X * cameraSensitivity;
+        controls.pitch -= dY * LOOK_SENS_Y * cameraSensitivity;
+        controls.pitch = Math.max(-1.48, Math.min(1.48, controls.pitch));
+        controls.cam.rotation.set(controls.pitch, controls.yaw, 0, 'YXZ');
         camera.rotation.set(controls.pitch, controls.yaw, 0, 'YXZ');
       }
     }
-  }, {passive: true});
+  }, {passive: false});
 
   function onTouchEnd(ev){
     for(var i = 0; i < ev.changedTouches.length; i++){
       var t = ev.changedTouches[i];
       if(t.identifier === moveTouchId) resetJoy();
-      if(t.identifier === lookTouchId) lookTouchId = null;
+      if(t.identifier === lookTouchId) {
+        lookTouchId = null;
+        if(ev.touches){
+          for(var j = 0; j < ev.touches.length; j++){
+            var ot = ev.touches[j];
+            if(ot.identifier !== moveTouchId && !isJumpTouch(ot) && !isPauseTouch(ot)){
+              lookTouchId = ot.identifier;
+              lastLookX = ot.clientX;
+              lastLookY = ot.clientY;
+              break;
+            }
+          }
+        }
+      }
     }
   }
   window.addEventListener('touchend', onTouchEnd, {passive: true});
   window.addEventListener('touchcancel', onTouchEnd, {passive: true});
 
   jumpBtn.addEventListener('touchstart', function(e){
-    e.preventDefault(); e.stopPropagation();
+    if(e.cancelable) e.preventDefault();
+    e.stopPropagation();
     ensureAudio();
     mv.jump = true;
     jumpBtn.classList.add('active');
   }, {passive: false});
 
   jumpBtn.addEventListener('touchend', function(e){
-    e.preventDefault(); e.stopPropagation();
+    if(e.cancelable) e.preventDefault();
+    e.stopPropagation();
     mv.jump = false;
     jumpBtn.classList.remove('active');
   }, {passive: false});
 
   jumpBtn.addEventListener('touchcancel', function(e){
-    e.preventDefault(); e.stopPropagation();
+    if(e.cancelable) e.preventDefault();
+    e.stopPropagation();
     mv.jump = false;
     jumpBtn.classList.remove('active');
   }, {passive: false});
@@ -1583,6 +1753,242 @@ document.getElementById('btn-rip-save-quit').addEventListener('click', function(
   document.getElementById('difficulty-screen').style.display = 'flex';
   checkSavedGame();
 });
+
+var settingsModal = document.getElementById('settings-modal');
+var btnSettings = document.getElementById('btn-settings');
+var btnSettingsClose = document.getElementById('btn-settings-close');
+var btnSettingsX = document.getElementById('btn-settings-x');
+var sensSlider = document.getElementById('setting-sens-slider');
+var sensVal = document.getElementById('setting-sens-val');
+var sfxToggle = document.getElementById('setting-sfx-toggle');
+var sfxSlider = document.getElementById('setting-sfx-slider');
+var sfxVal = document.getElementById('setting-sfx-val');
+
+function updateSettingsUI(){
+  if(sensSlider) sensSlider.value = cameraSensitivity.toFixed(1);
+  if(sensVal) sensVal.textContent = cameraSensitivity.toFixed(1) + 'x';
+  if(sfxSlider) sfxSlider.value = Math.round(soundEffectsVolume * 100);
+  if(sfxVal) sfxVal.textContent = Math.round(soundEffectsVolume * 100) + '%';
+  if(sfxToggle){
+    if(soundEffectsEnabled && soundEffectsVolume > 0){
+      sfxToggle.textContent = '🔊 ON';
+      sfxToggle.style.background = '#052e16';
+      sfxToggle.style.borderColor = '#4ade80';
+      sfxToggle.style.color = '#4ade80';
+    } else {
+      sfxToggle.textContent = '🔇 OFF';
+      sfxToggle.style.background = '#2d0000';
+      sfxToggle.style.borderColor = '#ef4444';
+      sfxToggle.style.color = '#ef4444';
+    }
+  }
+}
+
+if(btnSettings && settingsModal){
+  btnSettings.addEventListener('click', function(e){
+    e.stopPropagation();
+    updateSettingsUI();
+    settingsModal.style.display = 'flex';
+  });
+}
+
+function closeSettingsModal(e){
+  if(e) e.stopPropagation();
+  if(settingsModal) settingsModal.style.display = 'none';
+  if(!controls.isLocked && isRunActive && !win && playerHP > 0){
+    var ds = document.getElementById('difficulty-screen');
+    if(!ds || ds.style.display === 'none'){
+      var pm = document.getElementById('pause-menu');
+      if(pm) pm.style.display = 'flex';
+    }
+  }
+}
+
+function isGameOverlayOpen(){
+  var ds = document.getElementById('difficulty-screen');
+  var go = document.getElementById('gameover');
+  var sm = document.getElementById('settings-modal');
+  if(ds && ds.style.display !== 'none') return true;
+  if(go && go.style.display === 'flex') return true;
+  if(sm && sm.style.display === 'flex') return true;
+  return false;
+}
+
+var pauseMenu = document.getElementById('pause-menu');
+var btnPauseResume = document.getElementById('btn-pause-resume');
+var btnPauseSettings = document.getElementById('btn-pause-settings');
+var btnPauseRestart = document.getElementById('btn-pause-restart');
+var btnPauseQuit = document.getElementById('btn-pause-quit');
+
+function closePauseMenu(e){
+  if(e){
+    if(e.stopPropagation) e.stopPropagation();
+    if(e.preventDefault && e.type === 'touchstart') e.preventDefault();
+  }
+  if(pauseMenu) pauseMenu.style.display = 'none';
+  controls.lock();
+}
+
+if(pauseMenu){
+  pauseMenu.addEventListener('click', function(e){
+    var card = document.getElementById('pause-menu-card');
+    if(e.target === pauseMenu || (card && !card.contains(e.target))){
+      closePauseMenu(e);
+    }
+  });
+  pauseMenu.addEventListener('touchstart', function(e){
+    var card = document.getElementById('pause-menu-card');
+    if(e.target === pauseMenu || (card && !card.contains(e.target))){
+      closePauseMenu(e);
+    }
+  }, {passive: false});
+}
+
+if(btnPauseResume){
+  btnPauseResume.addEventListener('click', function(e){
+    closePauseMenu(e);
+  });
+}
+
+if(btnPauseSettings){
+  btnPauseSettings.addEventListener('click', function(e){
+    e.stopPropagation();
+    if(pauseMenu) pauseMenu.style.display = 'none';
+    updateSettingsUI();
+    if(settingsModal) settingsModal.style.display = 'flex';
+  });
+}
+
+if(btnPauseRestart){
+  btnPauseRestart.addEventListener('click', function(e){
+    e.stopPropagation();
+    if(pauseMenu) pauseMenu.style.display = 'none';
+    playerHP = maxHP; updateHearts();
+    started = false; lvl2 = false; lvl3 = false; win = false;
+    lastCheckpointCamPos = null;
+    runTimer = 0; deathCount = 0; isRunActive = true;
+    try{ localStorage.removeItem(SAVE_STORAGE_KEY); }catch(err){}
+    camera.position.set(-1, 2.62, 14);
+    controls.yaw = 0; controls.pitch = 0;
+    camera.rotation.set(0, 0, 0, 'YXZ');
+    vy = 0; velX = 0; velZ = 0;
+    var mapToLoad = hardMode ? 'hard_map.json' : 'map.json';
+    loadMapFile(mapToLoad, function(){
+      if(hardMode && stalker){
+        stalker.active = true; stalker.state = 'patrol';
+        stalker.pos = {x:-18, y:1.5, z:18};
+        pickWanderTarget();
+        stalkerMesh.position.set(stalker.pos.x, stalker.pos.y, stalker.pos.z);
+        stalkerMesh.visible = true;
+      } else if(stalker){
+        stalker.active = false;
+        stalkerMesh.visible = false;
+      }
+    });
+    controls.lock();
+    updateLiveHud();
+  });
+}
+
+if(btnPauseQuit){
+  btnPauseQuit.addEventListener('click', function(e){
+    e.stopPropagation();
+    if(pauseMenu) pauseMenu.style.display = 'none';
+    var saveData = {
+      hardMode: hardMode,
+      stage: getCurrentStageName(),
+      runTimer: runTimer,
+      deathCount: deathCount,
+      lastCheckpointCamPos: lastCheckpointCamPos,
+      checkpoints: {started: started, lvl2: lvl2, lvl3: lvl3, win: win}
+    };
+    try{ localStorage.setItem(SAVE_STORAGE_KEY, JSON.stringify(saveData)); }catch(err){}
+    isRunActive = false;
+    controls.unlock();
+    document.getElementById('live-hud-badge').style.display = 'none';
+    document.getElementById('difficulty-screen').style.display = 'flex';
+    checkSavedGame();
+  });
+}
+
+var touchPauseBtn = document.getElementById('touch-pause-btn');
+if(touchPauseBtn){
+  touchPauseBtn.addEventListener('touchstart', function(e){
+    e.preventDefault(); e.stopPropagation();
+    if(pauseMenu) pauseMenu.style.display = 'flex';
+    controls.unlock();
+  }, {passive: false});
+  touchPauseBtn.addEventListener('click', function(e){
+    e.preventDefault(); e.stopPropagation();
+    if(pauseMenu) pauseMenu.style.display = 'flex';
+    controls.unlock();
+  });
+}
+window.addEventListener('keydown', function(e){
+  if(e.code === 'Escape' || e.key === 'Escape'){
+    var pm = document.getElementById('pause-menu');
+    var sm = document.getElementById('settings-modal');
+
+    if(sm && sm.style.display === 'flex'){
+      closeSettingsModal(e);
+      return;
+    }
+
+    if(pm && pm.style.display === 'flex'){
+      pm.style.display = 'none';
+      controls.lock();
+      return;
+    }
+
+    if(isRunActive && !win && playerHP > 0 && !isGameOverlayOpen()){
+      if(pm) pm.style.display = 'flex';
+      controls.unlock();
+    }
+  }
+});
+
+if(btnSettingsClose) btnSettingsClose.addEventListener('click', closeSettingsModal);
+if(btnSettingsX) btnSettingsX.addEventListener('click', closeSettingsModal);
+if(settingsModal){
+  settingsModal.addEventListener('click', function(e){
+    if(e.target === settingsModal) closeSettingsModal(e);
+  });
+}
+
+if(sensSlider){
+  sensSlider.addEventListener('input', function(e){
+    e.stopPropagation();
+    cameraSensitivity = parseFloat(this.value) || 1.0;
+    if(sensVal) sensVal.textContent = cameraSensitivity.toFixed(1) + 'x';
+    try { localStorage.setItem('maze_cam_sens', cameraSensitivity); } catch(err){}
+  });
+}
+
+if(sfxToggle){
+  sfxToggle.addEventListener('click', function(e){
+    e.stopPropagation();
+    soundEffectsEnabled = !soundEffectsEnabled;
+    try { localStorage.setItem('maze_sfx_enabled', soundEffectsEnabled ? '1' : '0'); } catch(err){}
+    updateSettingsUI();
+  });
+}
+
+if(sfxSlider){
+  sfxSlider.addEventListener('input', function(e){
+    e.stopPropagation();
+    var val = parseInt(this.value, 10);
+    soundEffectsVolume = val / 100;
+    if(val === 0) soundEffectsEnabled = false;
+    else soundEffectsEnabled = true;
+    try {
+      localStorage.setItem('maze_sfx_vol', soundEffectsVolume);
+      localStorage.setItem('maze_sfx_enabled', soundEffectsEnabled ? '1' : '0');
+    } catch(err){}
+    updateSettingsUI();
+  });
+}
+
+updateSettingsUI();
 
 function checkSavedGame(){
   var container = document.getElementById('resume-container');
@@ -2081,7 +2487,14 @@ function updateStalker(dt, playerPos){
 
 function launchGame(hard){
   hardMode = !!hard;
+  playerHP = maxHP; updateHearts();
+  started = false; lvl2 = false; lvl3 = false; win = false;
+  lastCheckpointCamPos = null;
   runTimer = 0; deathCount = 0; isRunActive = true;
+  camera.position.set(-1, 2.62, 14);
+  controls.yaw = 0; controls.pitch = 0;
+  camera.rotation.set(0, 0, 0, 'YXZ');
+  vy = 0; velX = 0; velZ = 0;
   var screen = document.getElementById('difficulty-screen');
   if(screen) screen.style.display = 'none';
 
