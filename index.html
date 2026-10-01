@@ -77,7 +77,7 @@
     }
     </script>
 
-    <link rel="stylesheet" href="style.css?v=1.2.8">
+    <link rel="stylesheet" href="style.css?v=1.2.9">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -86,15 +86,14 @@
 <body>
 
     <header class="main-header">
+        <button id="menu-toggle-btn" class="menu-toggle-btn" aria-label="Open menu" title="Menu">
+            <span class="menu-bar"></span>
+            <span class="menu-bar"></span>
+            <span class="menu-bar"></span>
+        </button>
         <div class="header-container">
-            <a href="/about" target="_blank" class="logo" title="About SvK">S<span class="logo-v">v</span>K</a>
+            <a href="/" class="logo" title="SvK Games">S<span class="logo-v">v</span>K</a>
             <div class="header-controls">
-                <nav class="nav-links">
-                    <a href="#" class="active" data-filter="all">All Games</a>
-                    <a href="#" data-filter="arcade">Arcade</a>
-                    <a href="#" data-filter="action">Action</a>
-                    <a href="#" data-filter="mind">Mind</a>
-                </nav>
                 <div class="search-wrapper">
                     <span class="search-icon">🔍</span>
                     <input type="text" id="search-input" placeholder="Search games..." autocomplete="off">
@@ -103,6 +102,109 @@
             </div>
         </div>
     </header>
+
+    <div id="side-menu-backdrop" class="side-menu-backdrop"></div>
+    <aside id="side-menu" class="side-menu-drawer" aria-hidden="true">
+        <div class="side-menu-header">
+            <div class="side-menu-brand">
+                <span class="logo">S<span class="logo-v">v</span>K</span>
+            </div>
+            <button id="side-menu-close-btn" class="side-menu-close-btn" aria-label="Close menu">✕</button>
+        </div>
+        <div class="side-menu-content">
+            <nav class="side-nav-group">
+                <span class="side-nav-heading">Navigation</span>
+                <a href="/" class="side-nav-link active">
+                    <span class="side-nav-icon">🏠</span>
+                    <span class="side-nav-text">Home</span>
+                </a>
+                <a href="/about" target="_blank" class="side-nav-link">
+                    <span class="side-nav-icon">ℹ️</span>
+                    <span class="side-nav-text">About SvK</span>
+                </a>
+            </nav>
+
+            <div class="side-nav-divider"></div>
+
+            <nav class="side-nav-group" id="side-categories-group">
+                <span class="side-nav-heading">Categories</span>
+                <button type="button" class="side-nav-link category-link active" data-filter="all">
+                    <span class="side-nav-icon">🎮</span>
+                    <span class="side-nav-text">All Games</span>
+                </button>
+                <button type="button" class="side-nav-link category-link" data-filter="arcade">
+                    <span class="side-nav-icon">🕹️</span>
+                    <span class="side-nav-text">Arcade</span>
+                </button>
+                <button type="button" class="side-nav-link category-link" data-filter="mind">
+                    <span class="side-nav-icon">🧠</span>
+                    <span class="side-nav-text">Mind</span>
+                </button>
+                <button type="button" class="side-nav-link category-link" data-filter="Adventure">
+                    <span class="side-nav-icon">🗺️</span>
+                    <span class="side-nav-text">Adventure</span>
+                </button>
+                <button type="button" class="side-nav-link category-link" data-filter="Endless Runner">
+                    <span class="side-nav-icon">🏃</span>
+                    <span class="side-nav-text">Endless Runner</span>
+                </button>
+                <button type="button" class="side-nav-link category-link" data-filter="action">
+                    <span class="side-nav-icon">⚔️</span>
+                    <span class="side-nav-text">Action</span>
+                </button>
+                <button type="button" class="side-nav-link category-link" data-filter="puzzle">
+                    <span class="side-nav-icon">🧩</span>
+                    <span class="side-nav-text">Puzzle</span>
+                </button>
+                <button type="button" class="side-nav-link category-link" data-filter="racing">
+                    <span class="side-nav-icon">🏎️</span>
+                    <span class="side-nav-text">Racing</span>
+                </button>
+                <button type="button" class="side-nav-link category-link" data-filter="shooter">
+                    <span class="side-nav-icon">🎯</span>
+                    <span class="side-nav-text">Shooter</span>
+                </button>
+                <button type="button" class="side-nav-link category-link" data-filter="strategy">
+                    <span class="side-nav-icon">🏰</span>
+                    <span class="side-nav-text">Strategy</span>
+                </button>
+                <button type="button" class="side-nav-link category-link" data-filter="sports">
+                    <span class="side-nav-icon">⚽</span>
+                    <span class="side-nav-text">Sports</span>
+                </button>
+                <button type="button" class="side-nav-link category-link" data-filter="casual">
+                    <span class="side-nav-icon">☕</span>
+                    <span class="side-nav-text">Casual</span>
+                </button>
+                <button type="button" class="side-nav-link category-link" data-filter="rpg">
+                    <span class="side-nav-icon">🛡️</span>
+                    <span class="side-nav-text">RPG</span>
+                </button>
+                <button type="button" class="side-nav-link category-link" data-filter="simulation">
+                    <span class="side-nav-icon">✈️</span>
+                    <span class="side-nav-text">Simulation</span>
+                </button>
+                <button type="button" class="side-nav-link category-link" data-filter="survival">
+                    <span class="side-nav-icon">⛺</span>
+                    <span class="side-nav-text">Survival</span>
+                </button>
+            </nav>
+
+            <div class="side-nav-divider" id="side-playtest-divider" style="display: none;"></div>
+
+            <div class="side-playtest-section" id="side-playtest-section" style="display: none;">
+                <span class="side-nav-heading">Playtest Mode</span>
+                <div id="side-playtest-unlocked" class="side-playtest-card">
+                    <div class="side-playtest-badge">
+                        <span class="side-playtest-dot"></span>
+                        <span>TESTER ACTIVE</span>
+                    </div>
+                    <p class="side-playtest-desc">Confidential builds are unlocked on the portal.</p>
+                    <button id="side-playtest-exit-btn" class="side-playtest-btn exit">Exit Playtest Mode</button>
+                </div>
+            </div>
+        </div>
+    </aside>
 
     <main class="portal-container">
 
@@ -182,6 +284,6 @@
 
     <div id="toast-notification" class="toast-notification">Link copied to clipboard! 📋</div>
 
-    <script src="portal.js?v=1.2.8"></script>
+    <script src="portal.js?v=1.2.9"></script>
 </body>
 </html>

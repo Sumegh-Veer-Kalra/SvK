@@ -76,6 +76,8 @@ class PortalController {
 
             this.setupSearch();
 
+            this.setupSideMenu();
+
             document.addEventListener("fullscreenchange", () => {
                 this.handleFullscreenChange();
                 this.updateIframeScaling();
@@ -175,8 +177,9 @@ class PortalController {
             if (this.searchQuery.length > 0) {
                 sectionTitle.innerText = "Search Results";
             } else if (this.activeFilter !== "all") {
-                
-                sectionTitle.innerText = this.activeFilter.charAt(0).toUpperCase() + this.activeFilter.slice(1) + " Games";
+                const words = this.activeFilter.toLowerCase().split(/[\s-]+/);
+                const titleStr = words.map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+                sectionTitle.innerText = titleStr + " Games";
             } else {
                 sectionTitle.innerText = "Popular Games";
             }
@@ -184,10 +187,9 @@ class PortalController {
 
         const featuredCard = document.getElementById("featured-game-card");
         if (featuredCard) {
-            if (this.searchQuery.length > 0) {
+            if (this.searchQuery.length > 0 || this.activeFilter !== "all") {
                 featuredCard.style.display = "none";
             } else {
-                
                 if (this.games.length > 0) {
                     featuredCard.style.display = "flex";
                 }
@@ -196,7 +198,7 @@ class PortalController {
 
         const recentlyPlayedSection = document.getElementById("recently-played-section");
         if (recentlyPlayedSection) {
-            if (this.searchQuery.length > 0) {
+            if (this.searchQuery.length > 0 || this.activeFilter !== "all") {
                 recentlyPlayedSection.style.display = "none";
             } else {
                 this.renderRecentlyPlayed();
@@ -217,8 +219,21 @@ class PortalController {
                 return false;
             }
 
-            if (this.activeFilter !== "all" && game.category !== this.activeFilter) {
-                return false;
+            if (this.activeFilter !== "all") {
+                const target = this.activeFilter.toLowerCase().replace(/[\s-]+/g, "");
+                const cat = (game.category || "").toLowerCase().replace(/[\s-]+/g, "");
+                const matchCategory = cat === target;
+                const matchTags = Array.isArray(game.tags) && game.tags.some(t => {
+                    const tag = t.toLowerCase().replace(/[\s-]+/g, "");
+                    if (tag === target) return true;
+                    if (target === "survival" && tag === "survive") return true;
+                    if (target === "endlessrunner" && tag === "endless") return true;
+                    return false;
+                });
+
+                if (!matchCategory && !matchTags) {
+                    return false;
+                }
             }
 
             if (this.searchQuery.length > 0) {
@@ -304,18 +319,40 @@ class PortalController {
     }
 
     setupCategoryFilters() {
-        const filters = document.querySelectorAll(".nav-links a");
-        filters.forEach(link => {
-            link.addEventListener("click", (e) => {
+        const filters = document.querySelectorAll(".category-link");
+        filters.forEach(btn => {
+            btn.addEventListener("click", (e) => {
                 e.preventDefault();
 
                 filters.forEach(f => f.classList.remove("active"));
-                link.classList.add("active");
+                btn.classList.add("active");
 
-                this.activeFilter = link.getAttribute("data-filter");
+                this.activeFilter = btn.getAttribute("data-filter") || "all";
                 this.renderGrid();
+                this.closeSideMenu();
+
+                const gridSection = document.getElementById("games-grid-container");
+                if (gridSection) {
+                    gridSection.scrollIntoView({ behavior: "smooth", block: "start" });
+                }
             });
         });
+
+        const homeLink = document.querySelector('.side-nav-group a[href="/"]');
+        if (homeLink) {
+            homeLink.addEventListener("click", (e) => {
+                if (window.location.pathname === "/" || window.location.pathname === "") {
+                    e.preventDefault();
+                    filters.forEach(f => f.classList.remove("active"));
+                    const allBtn = document.querySelector('.category-link[data-filter="all"]');
+                    if (allBtn) allBtn.classList.add("active");
+                    this.activeFilter = "all";
+                    this.renderGrid();
+                    this.closeSideMenu();
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                }
+            });
+        }
     }
 
     playGame(gameId) {
@@ -1030,6 +1067,96 @@ class PortalController {
         }
     }
 
+    setupSideMenu() {
+        const toggleBtn = document.getElementById("menu-toggle-btn");
+        const closeBtn = document.getElementById("side-menu-close-btn");
+        const backdrop = document.getElementById("side-menu-backdrop");
+        const drawer = document.getElementById("side-menu");
+
+        if (!drawer) return;
+
+        if (toggleBtn) {
+            toggleBtn.addEventListener("click", () => {
+                this.toggleSideMenu();
+            });
+        }
+
+        if (closeBtn) {
+            closeBtn.addEventListener("click", () => {
+                this.closeSideMenu();
+            });
+        }
+
+        if (backdrop) {
+            backdrop.addEventListener("click", () => {
+                this.closeSideMenu();
+            });
+        }
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && drawer.classList.contains("open")) {
+                this.closeSideMenu();
+            }
+        });
+
+        this.updateSideMenuPlaytestState();
+
+        const exitBtn = document.getElementById("side-playtest-exit-btn");
+        if (exitBtn) {
+            exitBtn.addEventListener("click", () => {
+                localStorage.removeItem("svk_playtester");
+                this.isTester = false;
+                const playtestSec = document.getElementById("playtest-section");
+                if (playtestSec) playtestSec.style.display = "none";
+                this.updateSideMenuPlaytestState();
+                this.renderGrid();
+            });
+        }
+    }
+
+    updateSideMenuPlaytestState() {
+        const section = document.getElementById("side-playtest-section");
+        const divider = document.getElementById("side-playtest-divider");
+
+        if (this.isTester) {
+            if (section) section.style.display = "block";
+            if (divider) divider.style.display = "block";
+        } else {
+            if (section) section.style.display = "none";
+            if (divider) divider.style.display = "none";
+        }
+    }
+
+    openSideMenu() {
+        const drawer = document.getElementById("side-menu");
+        const backdrop = document.getElementById("side-menu-backdrop");
+        if (drawer) {
+            drawer.classList.add("open");
+            drawer.setAttribute("aria-hidden", "false");
+        }
+        if (backdrop) backdrop.classList.add("open");
+        this.updateSideMenuPlaytestState();
+    }
+
+    closeSideMenu() {
+        const drawer = document.getElementById("side-menu");
+        const backdrop = document.getElementById("side-menu-backdrop");
+        if (drawer) {
+            drawer.classList.remove("open");
+            drawer.setAttribute("aria-hidden", "true");
+        }
+        if (backdrop) backdrop.classList.remove("open");
+    }
+
+    toggleSideMenu() {
+        const drawer = document.getElementById("side-menu");
+        if (drawer && drawer.classList.contains("open")) {
+            this.closeSideMenu();
+        } else {
+            this.openSideMenu();
+        }
+    }
+
     forceMobileMode() {
         console.log("[Portal Developer Tools] Forcing mobile mode...");
         this.isMobile = true;
@@ -1075,10 +1202,26 @@ class PortalController {
             return;
         }
 
-        const testGames = this.games.filter(g => g.playtest);
+        const testGames = this.games.filter(g => {
+            if (!g.playtest) return false;
+            if (this.activeFilter !== "all") {
+                const target = this.activeFilter.toLowerCase().replace(/[\s-]+/g, "");
+                const cat = (g.category || "").toLowerCase().replace(/[\s-]+/g, "");
+                const matchCategory = cat === target;
+                const matchTags = Array.isArray(g.tags) && g.tags.some(t => {
+                    const tag = t.toLowerCase().replace(/[\s-]+/g, "");
+                    if (tag === target) return true;
+                    if (target === "survival" && tag === "survive") return true;
+                    if (target === "endlessrunner" && tag === "endless") return true;
+                    return false;
+                });
+                return matchCategory || matchTags;
+            }
+            return true;
+        });
         if (testGames.length === 0) {
             const existingSection = document.getElementById("playtest-section");
-            if (existingSection) existingSection.remove();
+            if (existingSection) existingSection.style.display = "none";
             return;
         }
 
