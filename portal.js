@@ -25,6 +25,18 @@ class PortalController {
             document.body.classList.add("desktop-device");
         }
 
+        this.firebaseConfig = {
+            apiKey: "AIzaSyDrSFAr555ScmDaPopTNIDGCtn8Tt_k4Dk",
+            authDomain: "svk-games.firebaseapp.com",
+            projectId: "svk-games",
+            storageBucket: "svk-games.firebasestorage.app",
+            messagingSenderId: "83781444329",
+            appId: "1:83781444329:web:31a69a3e6fb4da1200c678",
+            measurementId: "G-6BBMQCVZ4E"
+        };
+        this.firestoreDb = null;
+        this.activeFeedbackType = "idea";
+
         this.init();
     }
 
@@ -77,6 +89,8 @@ class PortalController {
             this.setupSearch();
 
             this.setupSideMenu();
+
+            this.setupFeedbackModal();
 
             document.addEventListener("fullscreenchange", () => {
                 this.handleFullscreenChange();
@@ -1154,6 +1168,188 @@ class PortalController {
             this.closeSideMenu();
         } else {
             this.openSideMenu();
+        }
+    }
+
+    setupFeedbackModal() {
+        const modal = document.getElementById("feedbackModal");
+        const backdrop = document.getElementById("feedback-backdrop");
+        const closeBtn = document.getElementById("feedback-close-btn");
+        const form = document.getElementById("feedback-form");
+        const footerSuggestBtn = document.getElementById("footer-suggest-btn");
+        const footerSupportBtn = document.getElementById("footer-support-btn");
+        const sideSuggestBtn = document.getElementById("side-suggest-btn");
+        const sideSupportBtn = document.getElementById("side-support-btn");
+        const typeTabs = document.querySelectorAll(".feedback-type-tab");
+
+        if (footerSuggestBtn) {
+            footerSuggestBtn.addEventListener("click", () => this.openFeedbackModal("idea"));
+        }
+        if (footerSupportBtn) {
+            footerSupportBtn.addEventListener("click", () => this.openFeedbackModal("support"));
+        }
+        if (sideSuggestBtn) {
+            sideSuggestBtn.addEventListener("click", () => {
+                this.closeSideMenu();
+                this.openFeedbackModal("idea");
+            });
+        }
+        if (sideSupportBtn) {
+            sideSupportBtn.addEventListener("click", () => {
+                this.closeSideMenu();
+                this.openFeedbackModal("support");
+            });
+        }
+
+        if (closeBtn) {
+            closeBtn.addEventListener("click", () => this.closeFeedbackModal());
+        }
+        if (backdrop) {
+            backdrop.addEventListener("click", () => this.closeFeedbackModal());
+        }
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && modal && modal.classList.contains("active")) {
+                this.closeFeedbackModal();
+            }
+        });
+
+        typeTabs.forEach(tab => {
+            tab.addEventListener("click", () => {
+                typeTabs.forEach(t => t.classList.remove("active"));
+                tab.classList.add("active");
+                this.activeFeedbackType = tab.getAttribute("data-type") || "idea";
+                this.updateFeedbackModalLabels();
+            });
+        });
+
+        if (form) {
+            form.addEventListener("submit", (e) => this.submitFeedback(e));
+        }
+    }
+
+    openFeedbackModal(type = "idea") {
+        const modal = document.getElementById("feedbackModal");
+        if (!modal) return;
+        this.activeFeedbackType = type;
+
+        const tabs = document.querySelectorAll(".feedback-type-tab");
+        tabs.forEach(t => {
+            if (t.getAttribute("data-type") === type) {
+                t.classList.add("active");
+            } else {
+                t.classList.remove("active");
+            }
+        });
+
+        this.updateFeedbackModalLabels();
+        const statusMsg = document.getElementById("feedback-status-msg");
+        if (statusMsg) {
+            statusMsg.textContent = "";
+            statusMsg.className = "feedback-status-msg";
+        }
+
+        modal.classList.add("active");
+        modal.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+
+        const msgInput = document.getElementById("feedback-message");
+        if (msgInput) {
+            setTimeout(() => msgInput.focus(), 150);
+        }
+    }
+
+    closeFeedbackModal() {
+        const modal = document.getElementById("feedbackModal");
+        if (!modal) return;
+        modal.classList.remove("active");
+        modal.setAttribute("aria-hidden", "true");
+        if (!this.activeGameId) {
+            document.body.style.overflow = "";
+        }
+    }
+
+    updateFeedbackModalLabels() {
+        const titleEl = document.getElementById("feedback-modal-title");
+        const subtitleEl = document.getElementById("feedback-modal-subtitle");
+        const msgInput = document.getElementById("feedback-message");
+
+        if (this.activeFeedbackType === "idea") {
+            if (titleEl) titleEl.textContent = "Suggest a Game";
+            if (subtitleEl) subtitleEl.textContent = "Have a cool game idea? Send it straight to the creator!";
+            if (msgInput) msgInput.placeholder = "Describe the gameplay, theme, or concept you'd like to see...";
+        } else if (this.activeFeedbackType === "bug") {
+            if (titleEl) titleEl.textContent = "Report a Bug";
+            if (subtitleEl) subtitleEl.textContent = "Found something broken? Help us fix it!";
+            if (msgInput) msgInput.placeholder = "Which game/page, and what happened? Any details help...";
+        } else {
+            if (titleEl) titleEl.textContent = "Help & Support";
+            if (subtitleEl) subtitleEl.textContent = "Questions, feedback, or need help? We're listening.";
+            if (msgInput) msgInput.placeholder = "How can we help you?...";
+        }
+    }
+
+    async getFirestoreDb() {
+        if (this.firestoreDb) return this.firestoreDb;
+        const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js");
+        const { getFirestore } = await import("https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js");
+        const app = initializeApp(this.firebaseConfig);
+        this.firestoreDb = getFirestore(app);
+        return this.firestoreDb;
+    }
+
+    async submitFeedback(e) {
+        e.preventDefault();
+        const submitBtn = document.getElementById("feedback-submit-btn");
+        const btnText = submitBtn ? submitBtn.querySelector(".btn-text") : null;
+        const btnSpinner = submitBtn ? submitBtn.querySelector(".btn-spinner") : null;
+        const statusMsg = document.getElementById("feedback-status-msg");
+        const nameInput = document.getElementById("feedback-name");
+        const contactInput = document.getElementById("feedback-contact");
+        const msgInput = document.getElementById("feedback-message");
+
+        const message = msgInput ? msgInput.value.trim() : "";
+        if (!message) {
+            if (statusMsg) statusMsg.textContent = "Please enter a message.";
+            return;
+        }
+
+        const name = nameInput ? nameInput.value.trim() : "";
+        const contact = contactInput ? contactInput.value.trim() : "";
+
+        if (submitBtn) submitBtn.disabled = true;
+        if (btnText) btnText.style.display = "none";
+        if (btnSpinner) btnSpinner.style.display = "inline";
+        if (statusMsg) statusMsg.textContent = "";
+
+        try {
+            const db = await this.getFirestoreDb();
+            const { collection, addDoc, serverTimestamp } = await import("https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js");
+            await addDoc(collection(db, "feedback"), {
+                type: this.activeFeedbackType,
+                name: name || "Anonymous",
+                contact: contact || "",
+                message: message,
+                device: this.isMobile ? "mobile" : "desktop",
+                url: window.location.href,
+                createdAt: serverTimestamp()
+            });
+
+            if (msgInput) msgInput.value = "";
+            if (nameInput) nameInput.value = "";
+            if (contactInput) contactInput.value = "";
+
+            this.closeFeedbackModal();
+            this.showToast("Message sent! Thanks for your input 🚀");
+        } catch (err) {
+            console.error("[Feedback] Submit error:", err);
+            if (statusMsg) {
+                statusMsg.textContent = "Could not send right now. Please try again!";
+            }
+        } finally {
+            if (submitBtn) submitBtn.disabled = false;
+            if (btnText) btnText.style.display = "inline";
+            if (btnSpinner) btnSpinner.style.display = "none";
         }
     }
 
