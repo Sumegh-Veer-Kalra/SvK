@@ -3,13 +3,17 @@
     "id": "drop-off",
     "title": "Drop-Off",
     "category": "Endless Runner",
+    "categories": [
+      "Endless Runner",
+      "Intensity"
+    ],
     "orientation": "portrait",
     "aspectRatio": "9/16",
     "thumbnail": "games/drop-off/cover_square.png",
     "cover_square": "games/drop-off/cover_square.png",
     "cover_landscape": "games/drop-off/cover_landscape.png",
     "path": "games/drop-off/game.html",
-    "description": "You, a meteor, or a pizza, falling through the space to crash on Earth... though the path is polluted with obstacles\u2014some breakable, some not.",
+    "description": "You, a meteor, or a pizza, falling through the space to crash on Earth... though the path is polluted with obstacles—some breakable, some not.",
     "controls": "PC:\n- A or Left Arrow key: Go Left\n- D or Right Arrow key: Go Right\n- Space: Slam\nMobile:\n- Tap Left Side of Screen: Go Left\n- Tap Right Side of Screen: Go Right\n- Press \"SLAM\" button: Slam",
     "featured": false,
     "tags": [
@@ -30,6 +34,10 @@
     "id": "the-button",
     "title": "The Button",
     "category": "mind",
+    "categories": [
+      "mind",
+      "Troll"
+    ],
     "orientation": "landscape",
     "aspectRatio": "16/9",
     "thumbnail": "games/the-button/cover_square.png",
@@ -38,7 +46,7 @@
     "path": "games/the-button/game.html",
     "description": "Obey The Button. Whatever is first is truth. Crack it or be cracked. Would you mind pressing it? (Hint: You do)",
     "controls": "Tap/Click on button as The Button commands you to.",
-    "featured": true,
+    "featured": false,
     "tags": [
       "button",
       "reflex",
@@ -54,16 +62,19 @@
     "id": "maze",
     "title": "Maze",
     "category": "Adventure",
+    "categories": [
+      "Adventure",
+      "Intensity"
+    ],
     "orientation": "landscape",
     "aspectRatio": "16/9",
     "thumbnail": "games/maze/cover_square.png",
     "cover_square": "games/maze/cover_square.png",
     "cover_landscape": "games/maze/cover_landscape.png",
     "path": "games/maze/game.html",
-    "description": "You are dropped into a Maze that hunts you. Escape the 3 stages or you'll be its partner...",
-    "controls": "WASD / Arrow Keys: Move | Mouse: Look around (Click to lock cursor, Esc to unlock) | Space: Jump. On Touch: Virtual joystick & jump button.",
-    "featured": false,
-    "playtest": true,
+    "description": "You are trapped inside a multi-staged maze, your goal is to find the escape ladders and survive across all the stages and reach the end. And for a real challenge? Switch to Hard Mode to awaken the Ghost of an older player who failed to escape... now hunting the ones who try to escape—a relentless entity roaming the maze that hunts you down.",
+    "controls": "Desktop Controls:\n• WASD or Arrow Keys: Move\n• Mouse: Look around (Click screen to lock cursor)\n• Spacebar: Jump\n• Shift: Sprint\n• Esc: Pause Menu\n\nMobile / Touch Controls:\n• Left Joystick: Move\n• Right Screen Swipe: Look around\n• Green Button: Jump\n• Top-Right Icon: Pause Menu",
+    "featured": true,
     "tags": [
       "maze",
       "3d",

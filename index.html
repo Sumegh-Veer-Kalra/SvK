@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Free online games at SvK - Play Now!</title>
-    <meta name="description" content="Play the best free online games on SvK! No downloads, no installations, instant play directly in your browser on PC and mobile.">
-    <meta name="keywords" content="svk, arcade, free online games, browser games, html5 games, play free games, unblocked games, play reflex games, drop-off, the button, the-button, reflex games">
+    <title>SvK Games - Play Free Online Browser Games | Drop-Off, The Button</title>
+    <meta name="description" content="Play free online browser games on SvK Games. Instant play for Drop-Off, The Button, and arcade reflex games directly in your browser on PC and mobile.">
+    <meta name="keywords" content="svk games, svk, svk drop-off, drop off, drop-off svk, the button svk, the button, svk games about, about svk, sumegh veer kalra, svk creations, free online games, browser games, reflex games, arcade games, unblocked games">
     <meta name="robots" content="index, follow, max-image-preview:large">
     <link rel="canonical" href="https://svk-games.netlify.app/">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -21,16 +21,16 @@
 
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://svk-games.netlify.app/">
-    <meta property="og:title" content="SvK - Play Free Online Browser Games">
-    <meta property="og:description" content="Play premium free HTML5 online browser games on SvK. Fast, instant play on mobile and desktop with no installs.">
+    <meta property="og:title" content="SvK Games - Play Free Online Browser Games | Drop-Off, The Button">
+    <meta property="og:description" content="Play free online games on SvK Games. Instant play for Drop-Off, The Button, and arcade games with zero installs.">
     <meta property="og:image" content="https://svk-games.netlify.app/og-image.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://svk-games.netlify.app/">
-    <meta name="twitter:title" content="SvK - Play Free Online Browser Games">
-    <meta name="twitter:description" content="Play premium free HTML5 online browser games on SvK. Fast, instant play on mobile and desktop.">
+    <meta name="twitter:title" content="SvK Games - Play Free Online Browser Games | Drop-Off, The Button">
+    <meta name="twitter:description" content="Play free online games on SvK Games. Instant play for Drop-Off, The Button, and arcade games with zero installs.">
     <meta name="twitter:image" content="https://svk-games.netlify.app/og-image.png">
 
     <script type="application/ld+json">
@@ -77,7 +77,7 @@
     }
     </script>
 
-    <link rel="stylesheet" href="style.css?v=1.3.0">
+    <link rel="stylesheet" href="style.css?v=1.5.0">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -93,6 +93,10 @@
         </button>
         <div class="header-container">
             <a href="/" class="logo" title="SvK Games">S<span class="logo-v">v</span>K</a>
+            <div class="admin-top-bar" id="admin-top-bar" style="display: none;">
+                <button type="button" class="admin-top-tab active" id="admin-tab-games" data-tab="games">GAMES</button>
+                <button type="button" class="admin-top-tab" id="admin-tab-users" data-tab="users">USERS</button>
+            </div>
             <div class="header-controls">
                 <div class="search-wrapper">
                     <span class="search-icon">🔍</span>
@@ -112,22 +116,45 @@
             <button id="side-menu-close-btn" class="side-menu-close-btn" aria-label="Close menu">✕</button>
         </div>
         <div class="side-menu-content">
+            <div class="side-user-card" id="side-user-card">
+                <div class="side-user-info" id="side-user-info">
+                    <div class="side-user-avatar" id="side-user-avatar">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    </div>
+                    <div class="side-user-meta">
+                        <div class="side-user-name-row">
+                            <span class="side-user-name" id="side-user-name">Guest Player</span>
+                            <button type="button" class="side-edit-username-btn" id="side-edit-username-btn" title="Change Username" aria-label="Change Username" style="display: none;">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 20h9"></path>
+                                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <span class="side-user-badge" id="side-user-badge">Not Signed In</span>
+                    </div>
+                </div>
+                <div class="side-user-actions" id="side-user-actions">
+                    <button type="button" class="side-auth-btn" id="side-login-open-btn">Sign In / Sync</button>
+                    <button type="button" class="side-auth-btn signout" id="side-signout-btn" style="display: none;">Sign Out</button>
+                    <button type="button" class="side-auth-btn admin" id="side-admin-inbox-btn" style="display: none;">Inbox</button>
+                </div>
+            </div>
+
+            <div class="side-nav-divider"></div>
+
             <nav class="side-nav-group">
                 <span class="side-nav-heading">Navigation</span>
                 <a href="/" class="side-nav-link active">
-                    <span class="side-nav-icon">🏠</span>
                     <span class="side-nav-text">Home</span>
                 </a>
                 <a href="/about" target="_blank" class="side-nav-link">
-                    <span class="side-nav-icon">ℹ️</span>
                     <span class="side-nav-text">About SvK</span>
                 </a>
                 <button type="button" class="side-nav-link" id="side-suggest-btn">
-                    <span class="side-nav-icon">💡</span>
                     <span class="side-nav-text">Suggest a Game</span>
                 </button>
                 <button type="button" class="side-nav-link" id="side-support-btn">
-                    <span class="side-nav-icon">💬</span>
                     <span class="side-nav-text">Help & Support</span>
                 </button>
             </nav>
@@ -181,58 +208,89 @@
                 <button type="button" class="side-nav-link category-link" data-filter="survival">
                     <span class="side-nav-text">Survival</span>
                 </button>
+                <button type="button" class="side-nav-link category-link" data-filter="intensity">
+                    <span class="side-nav-text">Intensity</span>
+                </button>
+                <button type="button" class="side-nav-link category-link" data-filter="troll">
+                    <span class="side-nav-text">Troll</span>
+                </button>
             </nav>
 
-            <div class="side-nav-divider" id="side-playtest-divider" style="display: none;"></div>
-
-            <div class="side-playtest-section" id="side-playtest-section" style="display: none;">
-                <span class="side-nav-heading">Playtest Mode</span>
-                <div id="side-playtest-unlocked" class="side-playtest-card">
-                    <div class="side-playtest-badge">
-                        <span class="side-playtest-dot"></span>
-                        <span>TESTER ACTIVE</span>
-                    </div>
-                    <p class="side-playtest-desc">Confidential builds are unlocked on the portal.</p>
-                    <button id="side-playtest-exit-btn" class="side-playtest-btn exit">Exit Playtest Mode</button>
-                </div>
-            </div>
+            <div id="side-playtest-container"></div>
         </div>
     </aside>
 
     <main class="portal-container">
 
-        <section class="featured-section">
-            <div class="featured-card" id="featured-game-card" style="display: none;">
-                <div class="featured-info">
-                    <div class="featured-tags-row">
-                        <span class="tag" id="featured-tag">NEW!</span>
-                        <span class="tag-category" id="featured-category">CATEGORY</span>
+        <section class="admin-users-section" id="admin-users-section" style="display: none;">
+            <div class="admin-users-header">
+                <div class="admin-users-title-group">
+                    <h2 class="section-title admin-users-title">Users Directory</h2>
+                </div>
+                <button type="button" class="admin-users-refresh-btn" id="admin-users-refresh-btn" title="Fetch latest users from Firebase">↻ Refresh List</button>
+            </div>
+
+            <div class="admin-users-search-bar">
+                <input type="text" id="admin-users-search-input" class="feedback-input admin-users-search-input" placeholder="Search by @username or email..." autocomplete="off">
+                <button type="button" id="admin-users-search-btn" class="admin-users-search-btn">Search</button>
+                <button type="button" id="admin-users-clear-btn" class="admin-users-clear-btn" style="display: none;">Clear</button>
+            </div>
+
+            <div class="admin-users-count-row" id="admin-users-count-row">Showing 0 users</div>
+
+            <div class="admin-users-list" id="admin-users-list">
+                <div class="admin-inbox-empty">Click USERS to load accounts.</div>
+            </div>
+        </section>
+
+        <div id="portal-games-view">
+            <section class="featured-section">
+                <div class="featured-card" id="featured-game-card" style="display: none;">
+                    <div class="featured-info">
+                        <div class="featured-tags-row">
+                            <span class="tag" id="featured-tag">NEW!</span>
+                            <span class="tag-category" id="featured-category">CATEGORY</span>
+                        </div>
+                        <h1 class="featured-title" id="featured-title">Loading...</h1>
+                        <p class="featured-desc" id="featured-desc">Loading description...</p>
+                        <button class="play-btn-large" id="featured-play-btn">PLAY NOW</button>
                     </div>
-                    <h1 class="featured-title" id="featured-title">Loading...</h1>
-                    <p class="featured-desc" id="featured-desc">Loading description...</p>
-                    <button class="play-btn-large" id="featured-play-btn">PLAY NOW</button>
+                    <div class="featured-media">
+                        <div class="media-placeholder" id="featured-media-img"></div>
+                    </div>
                 </div>
-                <div class="featured-media">
-                    
-                    <div class="media-placeholder" id="featured-media-img"></div>
+            </section>
+
+            <section class="games-section mobile-only-featured" id="featured-mobile-section" style="display: none;">
+                <h2 class="section-title">FEATURED</h2>
+                <div class="games-grid" id="featured-mobile-grid-container">
                 </div>
-            </div>
-        </section>
+            </section>
 
+            <section class="games-section" id="recently-played-section" style="display: none;">
+                <h2 class="section-title">Recently Played</h2>
+                <div class="games-grid" id="recently-played-grid-container">
+                </div>
+            </section>
 
-        <section class="games-section" id="recently-played-section" style="display: none;">
-            <h2 class="section-title">Recently Played</h2>
-            <div class="games-grid" id="recently-played-grid-container">
-                
-            </div>
-        </section>
+            <section class="games-section" id="intensity-games-section" style="display: none;">
+                <h2 class="section-title">INTENSITY</h2>
+                <div class="games-grid" id="intensity-games-grid-container">
+                </div>
+            </section>
 
-        <section class="games-section">
-            <h2 class="section-title" id="games-section-title">Popular Games</h2>
-            <div class="games-grid" id="games-grid-container">
-                
-            </div>
-        </section>
+            <section class="games-section" id="troll-games-section" style="display: none;">
+                <h2 class="section-title">TROLL</h2>
+                <div class="games-grid" id="troll-games-grid-container">
+                </div>
+            </section>
+
+            <section class="games-section" id="main-games-section">
+                <h2 class="section-title" id="games-section-title">All Games</h2>
+                <div class="games-grid" id="games-grid-container">
+                </div>
+            </section>
+        </div>
 
     </main>
 
@@ -306,17 +364,31 @@
                     <button type="button" class="feedback-type-tab" data-type="support">Help & Support</button>
                     <button type="button" class="feedback-type-tab" data-type="bug">Bug Report</button>
                 </div>
-                <div class="feedback-field">
+                <div class="feedback-field" id="feedback-name-field">
                     <label for="feedback-name" class="feedback-label">Your Name <span class="feedback-optional">(optional)</span></label>
                     <input type="text" id="feedback-name" class="feedback-input" placeholder="e.g. PlayerOne" maxlength="50" autocomplete="name">
                 </div>
-                <div class="feedback-field">
+                <div class="feedback-inbox-notice" id="feedback-inbox-notice" style="display: none;">Replies from administration will arrive directly in your website Inbox.</div>
+                <div class="feedback-field" id="feedback-contact-field">
                     <label for="feedback-contact" class="feedback-label">Contact / Email <span class="feedback-optional">(optional, if you want a reply)</span></label>
                     <input type="text" id="feedback-contact" class="feedback-input" placeholder="e.g. player@email.com or @discord" maxlength="80">
                 </div>
                 <div class="feedback-field">
                     <label for="feedback-message" class="feedback-label">Message <span class="feedback-required">*</span></label>
-                    <textarea id="feedback-message" class="feedback-textarea" placeholder="Describe your game idea, issue, or feedback..." required maxlength="2000" rows="4"></textarea>
+                    <textarea id="feedback-message" class="feedback-textarea" placeholder="Describe your game idea, issue, or feedback..." required maxlength="2000" rows="3"></textarea>
+                </div>
+                <div class="feedback-field" id="feedback-screenshot-field" style="display: none;">
+                    <label class="feedback-label">Attach Screenshot <span class="feedback-optional">(optional)</span></label>
+                    <div class="feedback-file-dropzone" id="feedback-file-dropzone">
+                        <input type="file" id="feedback-screenshot-input" accept="image/*" class="feedback-file-input">
+                        <div class="feedback-file-prompt" id="feedback-file-prompt">
+                            <span>Click or tap to attach an image</span>
+                        </div>
+                        <div class="feedback-preview-box" id="feedback-preview-box" style="display: none;">
+                            <img id="feedback-preview-img" src="" alt="Preview" class="feedback-preview-img">
+                            <button type="button" id="feedback-remove-img-btn" class="feedback-remove-img-btn" title="Remove">✕</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="feedback-actions">
                     <span id="feedback-status-msg" class="feedback-status-msg"></span>
@@ -329,8 +401,144 @@
         </div>
     </div>
 
+    <div id="authModal" class="feedback-modal" aria-hidden="true">
+        <div class="feedback-backdrop" id="auth-backdrop"></div>
+        <div class="feedback-dialog auth-dialog">
+            <div class="feedback-header">
+                <div class="feedback-title-wrap">
+                    <h3 class="feedback-title" id="auth-modal-title">SvK Games Account</h3>
+                    <p class="feedback-subtitle" id="auth-modal-subtitle">Sync your game progress & scores across devices.</p>
+                </div>
+                <button type="button" class="feedback-close-btn" id="auth-close-btn" aria-label="Close">✕</button>
+            </div>
+            
+            <button type="button" class="google-auth-btn" id="google-signin-btn">
+                <svg width="18" height="18" viewBox="0 0 48 48">
+                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                </svg>
+                <span>Continue with Google</span>
+            </button>
+
+            <div class="auth-divider">
+                <span>or with email</span>
+            </div>
+
+            <form id="auth-email-form" class="feedback-form">
+                <div class="feedback-field">
+                    <label for="auth-email" class="feedback-label">Email</label>
+                    <input type="email" id="auth-email" class="feedback-input" placeholder="you@example.com" required autocomplete="email">
+                </div>
+                <div class="feedback-field">
+                    <label for="auth-password" class="feedback-label">Password</label>
+                    <div class="auth-password-wrap">
+                        <input type="password" id="auth-password" class="feedback-input" placeholder="••••••••" required minlength="6" autocomplete="current-password">
+                        <button type="button" id="auth-password-toggle" class="auth-password-toggle" aria-label="Toggle password visibility">
+                            <svg class="eye-icon eye-show" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                            <svg class="eye-icon eye-hide" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                <line x1="1" y1="1" x2="23" y2="23"></line>
+                            </svg>
+                        </button>
+                    </div>
+                    <span class="username-hint" id="auth-password-hint">At least 6 characters & must include a number (0–9).</span>
+                </div>
+                <div class="auth-toggle-row">
+                    <button type="button" id="auth-forgot-btn" class="auth-toggle-btn auth-forgot-btn">Forgot Password?</button>
+                    <button type="button" id="auth-toggle-mode-btn" class="auth-toggle-btn">Need an account? Register</button>
+                </div>
+                <div class="feedback-actions">
+                    <span id="auth-status-msg" class="feedback-status-msg"></span>
+                    <button type="submit" id="auth-submit-btn" class="feedback-submit-btn">
+                        <span class="btn-text" id="auth-submit-btn-text">Sign In</span>
+                        <span class="btn-spinner" id="auth-submit-spinner" style="display: none;">Please wait...</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="adminInboxModal" class="feedback-modal" aria-hidden="true">
+        <div class="feedback-backdrop" id="admin-inbox-backdrop"></div>
+        <div class="feedback-dialog admin-inbox-dialog">
+            <div class="feedback-header">
+                <div class="feedback-title-wrap">
+                    <h3 class="feedback-title">Admin Inbox</h3>
+                    <p class="feedback-subtitle" id="admin-inbox-count">Submissions from players</p>
+                </div>
+                <button type="button" class="feedback-close-btn" id="admin-inbox-close-btn" aria-label="Close">✕</button>
+            </div>
+            <div class="admin-inbox-list" id="admin-inbox-list">
+                <div class="admin-inbox-empty">Loading feedback...</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="usernameModal" class="feedback-modal" aria-hidden="true">
+        <div class="feedback-backdrop" id="username-backdrop"></div>
+        <div class="feedback-dialog auth-dialog">
+            <div class="feedback-header">
+                <div class="feedback-title-wrap">
+                    <h3 class="feedback-title" id="username-modal-title">Choose Your Username</h3>
+                    <p class="feedback-subtitle" id="username-modal-subtitle">Your unique public identity across SvK Games.</p>
+                </div>
+                <button type="button" class="feedback-close-btn" id="username-close-btn" aria-label="Close" style="display: none;">✕</button>
+            </div>
+            <form id="username-form" class="feedback-form">
+                <div class="feedback-field">
+                    <label for="username-input" class="feedback-label">Username</label>
+                    <input type="text" id="username-input" class="feedback-input" placeholder="e.g. Player One" required minlength="1" maxlength="20" autocomplete="off">
+                    <span class="username-hint">1–20 characters: letters, numbers, spaces, underscores (_) or dots (.)</span>
+                </div>
+                <div class="feedback-actions">
+                    <span id="username-status-msg" class="feedback-status-msg"></span>
+                    <button type="submit" id="username-submit-btn" class="feedback-submit-btn">
+                        <span class="btn-text" id="username-submit-text">Save Username</span>
+                        <span class="btn-spinner" id="username-submit-spinner" style="display: none;">Checking...</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="adminActionModal" class="feedback-modal" aria-hidden="true">
+        <div class="feedback-backdrop" id="admin-action-backdrop"></div>
+        <div class="feedback-dialog auth-dialog">
+            <div class="feedback-header">
+                <div class="feedback-title-wrap">
+                    <h3 class="feedback-title" id="admin-action-title">Manage User</h3>
+                    <p class="feedback-subtitle" id="admin-action-subtitle"></p>
+                </div>
+                <button type="button" class="feedback-close-btn" id="admin-action-close-btn" aria-label="Close">✕</button>
+            </div>
+            <div id="admin-action-body" class="admin-action-body"></div>
+        </div>
+    </div>
+
+    <div id="warningModal" class="feedback-modal" aria-hidden="true">
+        <div class="feedback-backdrop"></div>
+        <div class="feedback-dialog auth-dialog warning-dialog">
+            <div class="feedback-header">
+                <div class="feedback-title-wrap">
+                    <h3 class="feedback-title warning-modal-title">WARNING</h3>
+                    <p class="feedback-subtitle">An Admin warned you</p>
+                </div>
+            </div>
+            <div class="warning-message-box" id="warning-modal-message"></div>
+            <div class="feedback-actions">
+                <span class="feedback-status-msg"></span>
+                <button type="button" id="warning-dismiss-btn" class="feedback-submit-btn warning-dismiss-btn">I Understand</button>
+            </div>
+        </div>
+    </div>
+
     <div id="toast-notification" class="toast-notification">Link copied to clipboard! 📋</div>
 
-    <script src="portal.js?v=1.3.0"></script>
+    <script src="portal.js?v=1.5.1"></script>
 </body>
 </html>

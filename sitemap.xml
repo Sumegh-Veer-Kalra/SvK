@@ -2,22 +2,32 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://svk-games.netlify.app/</loc>
+    <lastmod>2026-10-12</lastmod>
     <priority>1.0</priority>
     <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://svk-games.netlify.app/games/drop-off/</loc>
-    <priority>0.8</priority>
+    <lastmod>2026-10-12</lastmod>
+    <priority>0.9</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://svk-games.netlify.app/games/the-button/</loc>
-    <priority>0.8</priority>
+    <lastmod>2026-10-12</lastmod>
+    <priority>0.9</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://svk-games.netlify.app/about</loc>
-    <priority>0.7</priority>
-    <changefreq>monthly</changefreq>
+    <lastmod>2026-10-12</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://svk-games.netlify.app/games/maze/</loc>
+    <lastmod>2026-10-14</lastmod>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
   </url>
 </urlset>
